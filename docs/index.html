@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NCA-GENL Study Hub | NVIDIA Certified Associate</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <span class="nvidia-badge">NVIDIA</span>
+        NCA-GENL Study Hub
+      </a>
+      <div class="navbar-links">
+        <a href="index.html" class="active">Home</a>
+        <a href="study.html">Study</a>
+        <a href="exam.html">Mock Exam</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1>NCA-GENL Study Hub</h1>
+      <p class="subtitle">NVIDIA Certified Associate: Generative AI with LLMs</p>
+      <div class="exam-info">
+        <span>50-51 Questions</span>
+        <span>60 Minutes</span>
+        <span>Multiple Choice</span>
+        <span>~$135 USD</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mode Cards -->
+  <section class="container">
+    <div class="mode-cards">
+      <a href="study.html" class="mode-card">
+        <div class="icon">&#128218;</div>
+        <h2>Study Mode</h2>
+        <p>Browse the quick reference cheat sheet and practice questions with detailed explanations at your own pace.</p>
+        <span class="badge">NO TIMER</span>
+      </a>
+      <a href="exam.html" class="mode-card">
+        <div class="icon">&#127919;</div>
+        <h2>Mock Exam</h2>
+        <p>Simulate the real exam with a 60-minute timer, randomized questions, and shuffled answer positions.</p>
+        <span class="badge">TIMED</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="container">
+    <div class="stats-bar" id="statsBar">
+      <div class="stat-item">
+        <div class="stat-value" id="statTotal">--</div>
+        <div class="stat-label">Questions</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="statTopics">--</div>
+        <div class="stat-label">Topics</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="statAttempts">0</div>
+        <div class="stat-label">Attempts</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="statBestScore">--</div>
+        <div class="stat-label">Best Score</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Activity -->
+  <section class="container" style="max-width: 800px; margin-bottom: 60px;">
+    <div id="recentActivity" style="text-align: center;">
+      <p class="text-muted">Complete a mock exam to see your progress here.</p>
+    </div>
+    <div style="text-align: center; margin-top: 24px;">
+      <button class="btn btn-secondary btn-sm" onclick="resetAllData()">Reset All Data</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>NCA-GENL Study Hub &mdash; Built for exam preparation</p>
+      <p style="margin-top: 4px;">Not affiliated with NVIDIA Corporation</p>
+    </div>
+  </footer>
+
+  <script src="js/questions.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Populate stats
+      if (typeof QUESTIONS_DB !== 'undefined') {
+        document.getElementById('statTotal').textContent = QUESTIONS_DB.questions.length;
+        document.getElementById('statTopics').textContent = QUESTIONS_DB.metadata.topics.length;
+      }
+
+      // Load localStorage stats
+      loadStats();
+    });
+
+    function loadStats() {
+      var history = JSON.parse(localStorage.getItem('nca_genl_history') || '[]');
+      var attempts = history.length;
+      document.getElementById('statAttempts').textContent = attempts;
+
+      if (attempts > 0) {
+        var bestPercent = Math.max.apply(null, history.map(function(h) { return h.percent; }));
+        document.getElementById('statBestScore').textContent = bestPercent + '%';
+
+        var latest = history[history.length - 1];
+        var activityEl = document.getElementById('recentActivity');
+        activityEl.innerHTML =
+          '<div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px;">' +
+          '<h4 style="margin-bottom: 12px;">Recent Activity</h4>' +
+          history.slice(-5).reverse().map(function(h) {
+            var cls = h.percent >= 90 ? 'color:var(--success)' :
+                      h.percent >= 80 ? 'color:var(--nv-green)' :
+                      h.percent >= 70 ? 'color:var(--warning)' : 'color:var(--danger)';
+            return '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-color);">' +
+              '<span class="text-muted">' + h.date + '</span>' +
+              '<span style="' + cls + ';font-weight:700;">' + h.score + '/' + h.total + ' (' + h.percent + '%)</span>' +
+              '</div>';
+          }).join('') +
+          '</div>';
+      } else {
+        document.getElementById('statBestScore').textContent = '--';
+      }
+    }
+
+    function resetAllData() {
+      if (confirm('Are you sure you want to reset ALL saved data? This cannot be undone.')) {
+        localStorage.removeItem('nca_genl_history');
+        localStorage.removeItem('nca_genl_exam_session');
+        location.reload();
+      }
+    }
+  </script>
+</body>
+</html>

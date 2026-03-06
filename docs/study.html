@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Mode | NCA-GENL Study Hub</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <span class="nvidia-badge">NVIDIA</span>
+        NCA-GENL Study Hub
+      </a>
+      <div class="navbar-links">
+        <a href="index.html">Home</a>
+        <a href="study.html" class="active">Study</a>
+        <a href="exam.html">Mock Exam</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>Study Mode</h1>
+      <p>Review the cheat sheet and practice questions at your own pace.</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="study-tabs">
+      <button class="study-tab active" onclick="showTab('cheatsheet')">Cheat Sheet</button>
+      <button class="study-tab" onclick="showTab('questions')">Practice Questions</button>
+    </div>
+
+    <!-- CHEAT SHEET TAB -->
+    <div id="tab-cheatsheet" class="study-panel active">
+      <div class="ref-sheet">
+
+        <!-- Exam Format -->
+        <div class="ref-section">
+          <h3>Exam Quick Facts</h3>
+          <div class="ref-highlight">
+            <strong>50-51 questions</strong> | <strong>60 minutes</strong> (1.2 min/question) | Multiple choice (A-D) | Online proctored | ~$135 USD | Aim for <strong>80%+</strong> on practice
+          </div>
+        </div>
+
+        <!-- Transformer Architecture -->
+        <div class="ref-section">
+          <h3>Transformer Architecture</h3>
+          <h4>Core Pipeline</h4>
+          <div class="ref-code-block">Input &rarr; Embedding + Positional Encoding &rarr; Multi-Head Attention &rarr; Add &amp; Norm &rarr; Feed-Forward &rarr; Add &amp; Norm &rarr; Output</div>
+
+          <h4>Self-Attention Formula</h4>
+          <div class="ref-code-block">Attention(Q, K, V) = softmax(QK&#7488; / &radic;d&#7096;) V</div>
+
+          <h4>Q, K, V Matrices (MEMORIZE!)</h4>
+          <ul>
+            <li><strong>Query (Q):</strong> The token <em>seeking</em> information ("what am I looking for?")</li>
+            <li><strong>Key (K):</strong> Compatibility measure with other tokens ("what do I have?")</li>
+            <li><strong>Value (V):</strong> The actual information to be retrieved ("the content")</li>
+          </ul>
+
+          <h4>Positional Encoding</h4>
+          <ul>
+            <li>Transformers process tokens in <strong>parallel</strong> (no inherent order)</li>
+            <li>Positional encoding <strong>injects sequence order</strong> information</li>
+            <li>Uses sine/cosine functions or learned embeddings</li>
+          </ul>
+
+          <h4>Key Components</h4>
+          <ul>
+            <li><strong>Multi-Head Attention:</strong> Multiple heads focus on <em>different types</em> of relationships simultaneously</li>
+            <li><strong>Residual Connections:</strong> Enable gradient flow in deep networks (skip connections)</li>
+            <li><strong>Layer Normalization:</strong> Stabilizes training, enables deeper networks. Formula: LayerNorm(x) = &gamma; &times; (x - &mu;) / &sigma; + &beta;</li>
+            <li><strong>Feed-Forward Network:</strong> Applies non-linear transformations (2 linear layers + ReLU)</li>
+            <li><strong>Softmax:</strong> Normalizes attention weights to sum to 1</li>
+            <li><strong>Scaled Dot-Product:</strong> Divides by &radic;d&#7096; to prevent large values in softmax</li>
+          </ul>
+
+          <div class="ref-highlight">
+            <strong>Key Innovation over RNNs:</strong> Parallel processing capability &mdash; processes all tokens simultaneously
+          </div>
+        </div>
+
+        <!-- Model Types -->
+        <div class="ref-section">
+          <h3>Model Types Comparison</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Model</th><th>Architecture</th><th>Training</th><th>Best For</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>BERT</strong></td><td>Encoder-only</td><td>Masked LM + NSP</td><td>Understanding (classification, NER, QA)</td></tr>
+              <tr><td><strong>GPT</strong></td><td>Decoder-only</td><td>Autoregressive</td><td>Text generation, completion</td></tr>
+              <tr><td><strong>T5</strong></td><td>Encoder-Decoder</td><td>Text-to-text</td><td>Versatile multi-task</td></tr>
+            </tbody>
+          </table>
+          <ul>
+            <li><strong>Autoregressive (GPT):</strong> Predicts next token &rarr; generation focus</li>
+            <li><strong>Autoencoding (BERT):</strong> Bidirectional context &rarr; understanding focus</li>
+            <li><strong>BERT Segment Embeddings:</strong> Distinguish sentence A vs B in pair tasks</li>
+          </ul>
+        </div>
+
+        <!-- Evaluation Metrics -->
+        <div class="ref-section">
+          <h3>Evaluation Metrics (HIGH PRIORITY)</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Metric</th><th>Use For</th><th>Measures</th><th>Range</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>BLEU</strong></td><td>Machine Translation</td><td>N-gram <em>precision</em> vs reference</td><td>0-1</td></tr>
+              <tr><td><strong>ROUGE</strong></td><td>Summarization</td><td>N-gram <em>recall</em> vs reference</td><td>0-1</td></tr>
+              <tr><td><strong>F1-Score</strong></td><td>Classification</td><td>Harmonic mean of precision &amp; recall</td><td>0-1</td></tr>
+              <tr><td><strong>Perplexity</strong></td><td>Language Modeling</td><td>How well model predicts text</td><td>Lower = better</td></tr>
+              <tr><td><strong>Cosine Similarity</strong></td><td>Semantic Closeness</td><td>Angle between embedding vectors</td><td>-1 to 1</td></tr>
+            </tbody>
+          </table>
+          <div class="ref-highlight">
+            <strong>EXAM TRAP:</strong> Higher BLEU = more similar to reference text. NOT broader vocabulary, NOT better understanding!
+          </div>
+        </div>
+
+        <!-- NVIDIA Tools -->
+        <div class="ref-section">
+          <h3>NVIDIA Tools (CRITICAL)</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Tool</th><th>Purpose</th><th>Key Features</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Triton Inference Server</strong></td><td>High-performance model serving</td><td>Dynamic batching, multi-framework, model versioning</td></tr>
+              <tr><td><strong>TensorRT</strong></td><td>Inference optimization</td><td>Layer fusion, INT8/FP16 quantization, kernel auto-tuning</td></tr>
+              <tr><td><strong>NeMo</strong></td><td>Building AI applications</td><td>Pre-trained models, distributed training, NLP/speech/vision</td></tr>
+              <tr><td><strong>RAPIDS (cuDF)</strong></td><td>GPU-accelerated data processing</td><td>GPU parallel processing, zero-copy memory, scales to multi-GPU</td></tr>
+              <tr><td><strong>ONNX</strong></td><td>Model portability</td><td>Cross-framework interoperability</td></tr>
+              <tr><td><strong>NGC Containers</strong></td><td>Reproducible environments</td><td>Encapsulate dependencies, consistent execution</td></tr>
+              <tr><td><strong>DGX Systems</strong></td><td>Purpose-built AI infrastructure</td><td>Optimized for training &amp; inference workloads</td></tr>
+            </tbody>
+          </table>
+          <div class="ref-highlight">
+            <strong>Remember:</strong> Triton = <em>serves</em> models | TensorRT = <em>optimizes</em> models | NeMo = <em>builds/trains</em> models
+          </div>
+        </div>
+
+        <!-- Training & Fine-tuning -->
+        <div class="ref-section">
+          <h3>Training &amp; Fine-tuning</h3>
+          <h4>Training Paradigms</h4>
+          <ul>
+            <li><strong>Pre-training:</strong> Learning from massive unlabeled corpora (self-supervised)</li>
+            <li><strong>Fine-tuning:</strong> Task-specific training on smaller labeled datasets</li>
+            <li><strong>Transfer Learning:</strong> Leverages pre-trained knowledge &rarr; reduces time &amp; compute</li>
+          </ul>
+          <h4>Parameter-Efficient Fine-tuning (PEFT)</h4>
+          <ul>
+            <li><strong>LoRA:</strong> Adds small trainable matrices (low-rank adaptation)</li>
+            <li><strong>Adapters:</strong> Small modules inserted between layers</li>
+            <li><strong>Prompt Tuning:</strong> Optimizes prompts rather than weights</li>
+          </ul>
+          <h4>Key Concepts</h4>
+          <ul>
+            <li><strong>Catastrophic Forgetting:</strong> Model loses pre-trained knowledge during fine-tuning</li>
+            <li><strong>EDA:</strong> Essential to uncover patterns, anomalies, biases before fine-tuning</li>
+            <li><strong>Teacher Forcing:</strong> Uses ground truth tokens during training (not model's own predictions)</li>
+            <li><strong>Gradient Accumulation:</strong> Simulates larger batch sizes with limited memory</li>
+            <li><strong>Learning Rate Warm-up:</strong> Gradually increases LR at start to stabilize training</li>
+            <li><strong>Dropout:</strong> Randomly sets neurons to zero to prevent overfitting</li>
+            <li><strong>Vanishing Gradient:</strong> Gradients too small during backprop &rarr; slow/stalled training</li>
+          </ul>
+        </div>
+
+        <!-- Tokenization -->
+        <div class="ref-section">
+          <h3>Tokenization</h3>
+          <ul>
+            <li><strong>Tokenizer:</strong> Tool that splits text into smaller units (tokens) for processing</li>
+            <li><strong>Subword Tokenization (BPE, WordPiece):</strong> Breaks words into subword units &rarr; handles OOV words</li>
+            <li>Reduces vocabulary size while maintaining semantic meaning</li>
+          </ul>
+        </div>
+
+        <!-- Generation Methods -->
+        <div class="ref-section">
+          <h3>Generation Methods</h3>
+          <ul>
+            <li><strong>Beam Search:</strong> Explores multiple candidate sequences simultaneously for higher quality</li>
+            <li><strong>Nucleus Sampling (top-p):</strong> Samples from smallest token set exceeding cumulative probability p</li>
+            <li><strong>Temperature:</strong> Controls randomness in generation (higher = more diverse)</li>
+          </ul>
+        </div>
+
+        <!-- Prompt Engineering -->
+        <div class="ref-section">
+          <h3>Prompt Engineering</h3>
+          <ul>
+            <li><strong>Zero-shot:</strong> Task description only, no examples</li>
+            <li><strong>Few-shot:</strong> Provide a few examples in the prompt (no fine-tuning needed)</li>
+            <li><strong>Chain-of-Thought (CoT):</strong> Step-by-step reasoning examples &rarr; best for complex multi-step reasoning</li>
+            <li><strong>System Message:</strong> Sets role/context for contextually appropriate responses</li>
+          </ul>
+          <div class="ref-highlight">
+            <strong>For multi-step reasoning tasks:</strong> Chain-of-Thought prompting is the most effective technique
+          </div>
+        </div>
+
+        <!-- NLP Applications -->
+        <div class="ref-section">
+          <h3>NLP Applications</h3>
+          <ul>
+            <li><strong>NER:</strong> Extracts person, organization, location names from text</li>
+            <li><strong>Extractive QA:</strong> Extracts answer span from passage</li>
+            <li><strong>Generative QA:</strong> Generates new text as the answer</li>
+            <li><strong>Sentiment/Emotion Classification:</strong> Use encoder models (BERT, RoBERTa)</li>
+          </ul>
+        </div>
+
+        <!-- RAG -->
+        <div class="ref-section">
+          <h3>RAG (Retrieval-Augmented Generation)</h3>
+          <ul>
+            <li>Combines information retrieval with text generation</li>
+            <li>Retrieves relevant documents, then generates grounded responses</li>
+            <li>Reduces hallucination, provides access to external/up-to-date knowledge</li>
+            <li><strong>Chunking:</strong> Splitting text into meaningful segments for efficient retrieval</li>
+          </ul>
+        </div>
+
+        <!-- Model Optimization -->
+        <div class="ref-section">
+          <h3>Model Optimization</h3>
+          <h4>Quantization</h4>
+          <ul>
+            <li>Reduces precision (FP32 &rarr; INT8) &rarr; smaller, faster, less power</li>
+            <li>Saves power and reduces heat</li>
+            <li>Reduces memory and improves cache utilization</li>
+            <li>Small trade-off in accuracy</li>
+          </ul>
+          <h4>Knowledge Distillation</h4>
+          <ul>
+            <li>Transfers knowledge from larger "teacher" to smaller "student" model</li>
+            <li>Student learns from soft probability outputs, not just hard labels</li>
+          </ul>
+        </div>
+
+        <!-- Deployment -->
+        <div class="ref-section">
+          <h3>Deployment &amp; Production</h3>
+          <ul>
+            <li><strong>A/B Testing:</strong> Deploy both models, serve traffic equally (50/50) for fair comparison</li>
+            <li><strong>Model Versioning:</strong> Enables seamless rollback and comparison</li>
+            <li><strong>Docker/NGC Containers:</strong> Consistent environments for reproducibility</li>
+            <li><strong>LangChain:</strong> Orchestrates LLM components into complex workflows</li>
+            <li><strong>Cost Optimization:</strong> Balance performance, latency, and computational costs</li>
+            <li><strong>Dynamic Batching (Triton):</strong> Combines requests for optimal throughput</li>
+          </ul>
+        </div>
+
+        <!-- Diffusion Models -->
+        <div class="ref-section">
+          <h3>Diffusion Models</h3>
+          <ul>
+            <li><strong>Forward Diffusion:</strong> Progressively injects noise into data</li>
+            <li><strong>Reverse Diffusion:</strong> Learns to generate samples from noise vectors</li>
+          </ul>
+        </div>
+
+        <!-- Ethics & Alignment -->
+        <div class="ref-section">
+          <h3>Ethics &amp; Alignment</h3>
+          <ul>
+            <li><strong>Red-Teaming:</strong> Adversarial testing to identify biases, safety risks, harmful outputs</li>
+            <li><strong>Accountability:</strong> Ethical implications, potential misuse, unintended consequences</li>
+            <li><strong>Explainability:</strong> Explicable decision-making for societal alignment</li>
+            <li><strong>Hallucination:</strong> Model generating plausible but factually incorrect information</li>
+          </ul>
+        </div>
+
+        <!-- Activation Functions -->
+        <div class="ref-section">
+          <h3>Activation Functions</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Function</th><th>Range</th><th>Strengths</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>ReLU</strong></td><td>[0, &infin;)</td><td>Computationally efficient, mitigates vanishing gradient</td></tr>
+              <tr><td><strong>Sigmoid</strong></td><td>[0, 1]</td><td>Better for predicting probabilities</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Experiment Design -->
+        <div class="ref-section">
+          <h3>Experiment Design</h3>
+          <ul>
+            <li><strong>Paired t-test:</strong> Compare 2 models on same data (normal distribution)</li>
+            <li><strong>Cross-validation:</strong> Evaluate model when no test set available</li>
+            <li><strong>Stratified k-fold:</strong> Preserves class distribution for imbalanced datasets</li>
+          </ul>
+        </div>
+
+        <!-- Python Libraries -->
+        <div class="ref-section">
+          <h3>Python Libraries</h3>
+          <ul>
+            <li><strong>HuggingFace Transformers:</strong> Specifically designed for LLMs; integrates with PyTorch &amp; TensorRT for GPU acceleration</li>
+            <li><strong>LangChain:</strong> Orchestrates LLM workflows (prompts, retrieval, memory)</li>
+            <li><strong>Regular Expressions (regex):</strong> Filter/select training data by keywords</li>
+          </ul>
+        </div>
+
+        <!-- Time Management -->
+        <div class="ref-section">
+          <h3>Exam Time Management</h3>
+          <ul>
+            <li><strong>First Pass (30-35 min):</strong> Answer confident questions, mark uncertain ones</li>
+            <li><strong>Second Pass (20-25 min):</strong> Review marked questions, use elimination</li>
+            <li><strong>Final Check (5 min):</strong> Verify completeness, double-check flagged questions</li>
+          </ul>
+          <div class="ref-highlight">
+            <strong>Tips:</strong> Look for keywords like "primary", "best", "most effective". Eliminate obvious wrong answers first. Trust your first instinct.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- QUESTIONS TAB -->
+    <div id="tab-questions" class="study-panel">
+      <!-- Topic Filter -->
+      <div class="topic-filter" id="topicFilter"></div>
+
+      <!-- Question List -->
+      <div id="questionList"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>NCA-GENL Study Hub &mdash; Built for exam preparation</p>
+    </div>
+  </footer>
+
+  <script src="js/questions.js"></script>
+  <script src="js/study.js"></script>
+</body>
+</html>

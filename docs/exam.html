@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mock Exam | NCA-GENL Study Hub</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <span class="nvidia-badge">NVIDIA</span>
+        NCA-GENL Study Hub
+      </a>
+      <div class="navbar-links">
+        <a href="index.html">Home</a>
+        <a href="study.html">Study</a>
+        <a href="exam.html" class="active">Mock Exam</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- SETUP SCREEN -->
+    <div id="examSetup" class="exam-setup">
+      <h2>Mock Exam</h2>
+      <p>Simulate the real NCA-GENL certification exam with randomized questions, shuffled answers, and a countdown timer.</p>
+
+      <div class="exam-info-grid">
+        <div class="exam-info-item">
+          <div class="value">50</div>
+          <div class="label">Questions</div>
+        </div>
+        <div class="exam-info-item">
+          <div class="value">60</div>
+          <div class="label">Minutes</div>
+        </div>
+        <div class="exam-info-item">
+          <div class="value">80%</div>
+          <div class="label">Target</div>
+        </div>
+      </div>
+
+      <div id="resumePrompt" class="hidden" style="background: var(--bg-card); border: 1px solid var(--warning); border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px;">
+        <p style="color: var(--warning); font-weight: 600; margin-bottom: 12px;">You have an unfinished exam session.</p>
+        <div style="display: flex; gap: 12px; justify-content: center;">
+          <button class="btn btn-primary" onclick="resumeExam()">Resume Exam</button>
+          <button class="btn btn-secondary" onclick="discardSession()">Start Fresh</button>
+        </div>
+      </div>
+
+      <button id="startBtn" class="btn btn-primary btn-lg" onclick="startExam()">Start Mock Exam</button>
+    </div>
+
+    <!-- EXAM INTERFACE -->
+    <div id="examContainer" class="exam-container">
+      <!-- Top Bar -->
+      <div class="exam-topbar">
+        <div class="timer" id="timer">
+          <span class="timer-icon">&#9202;</span>
+          <span id="timerDisplay">60:00</span>
+        </div>
+        <div class="exam-progress">
+          <span id="progressText">1 / 50</span>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 2%"></div>
+          </div>
+          <span id="answeredCount">0 answered</span>
+        </div>
+      </div>
+
+      <!-- Question Grid -->
+      <div class="question-grid" id="questionGrid"></div>
+
+      <!-- Current Question -->
+      <div class="exam-question" id="examQuestion">
+        <div class="question-header">
+          <span class="question-number" id="qNumber">Q1</span>
+          <span class="question-topic" id="qTopic">Topic</span>
+        </div>
+        <div class="question-text" id="qText">Loading...</div>
+        <div class="options-list" id="qOptions"></div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="exam-nav">
+        <button class="nav-btn" id="prevBtn" onclick="prevQuestion()">&#8592; Previous</button>
+        <button class="mark-review-btn" id="markBtn" onclick="toggleMark()">&#9873; Mark for Review</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextQuestion()">Next &#8594;</button>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-section">
+        <button class="btn btn-primary btn-lg" onclick="confirmSubmit()">Submit Exam</button>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="resultsContainer" class="results-container">
+      <h2 style="margin-bottom: 24px;">Exam Results</h2>
+
+      <div class="results-score-circle" id="scoreCircle">
+        <div class="score-percent" id="scorePercent">0%</div>
+        <div class="score-label" id="scoreRaw">0/50</div>
+      </div>
+
+      <div class="results-message" id="resultsMessage">--</div>
+      <div class="results-detail" id="resultsDetail">--</div>
+
+      <div class="results-stats">
+        <div class="results-stat">
+          <div class="value text-green" id="resultCorrect">0</div>
+          <div class="label">Correct</div>
+        </div>
+        <div class="results-stat">
+          <div class="value" style="color: var(--danger)" id="resultIncorrect">0</div>
+          <div class="label">Incorrect</div>
+        </div>
+        <div class="results-stat">
+          <div class="value text-muted" id="resultUnanswered">0</div>
+          <div class="label">Unanswered</div>
+        </div>
+        <div class="results-stat">
+          <div class="value" id="resultTime">--</div>
+          <div class="label">Time Used</div>
+        </div>
+      </div>
+
+      <div class="results-actions">
+        <button class="btn btn-primary" onclick="showReview()">Review Answers</button>
+        <button class="btn btn-secondary" onclick="restartExam()">Take New Exam</button>
+        <a href="index.html" class="btn btn-secondary">Back to Home</a>
+      </div>
+
+      <!-- Review -->
+      <div class="review-section hidden" id="reviewSection">
+        <h3>Answer Review</h3>
+        <div class="review-filter-bar">
+          <button class="topic-btn active" onclick="filterReview('all', this)">All</button>
+          <button class="topic-btn" onclick="filterReview('incorrect', this)">Incorrect Only</button>
+          <button class="topic-btn" onclick="filterReview('correct', this)">Correct Only</button>
+          <button class="topic-btn" onclick="filterReview('unanswered', this)">Unanswered</button>
+        </div>
+        <div id="reviewList"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>NCA-GENL Study Hub &mdash; Built for exam preparation</p>
+    </div>
+  </footer>
+
+  <script src="js/questions.js"></script>
+  <script src="js/exam.js"></script>
+</body>
+</html>
