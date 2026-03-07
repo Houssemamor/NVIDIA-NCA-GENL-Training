@@ -22,11 +22,6 @@ NVIDIA-NCA-GENL Training/
 │       ├── questions.js
 │       ├── study.js
 │       └── exam.js
-└── temp/
-    ├── practice-exams/
-    ├── reference-materials/
-    ├── sample-questions/
-    └── study-guides/
 ```
 
 ## Run Locally
