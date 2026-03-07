@@ -1720,6 +1720,51 @@ const QUESTIONS_DB = {
       explanation: "Generative AI refers to AI systems capable of creating new content (text, images, audio, video, code) by learning patterns and structures from training data. Unlike discriminative models that classify or predict, generative models produce novel outputs. It is not limited to classification, hardware optimization, or data visualization.",
       topic: "Language Models",
       multiSelect: false
-    }
+    },
+      {
+      id: 114,
+      question: "Why do we need positional encoding in transformer-based models?",
+      options: [
+        "To represent the order of elements in a sequence.",
+        "To prevent overfitting of the model.",
+        "To reduce the dimensionality of the input data.",
+        "To increase the throughput of the model."
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "Positional encoding is a critical component in transformer-based models because, unlike recurrent neural networks (RNNs), transformers process input sequences in parallel and lack an inherent sense of word order. Positional encoding addresses this by embedding information about the position of each token in the sequence, enabling the model to understand the sequential relationships between tokens. According to the original transformer paper ('Attention is All You Need' by Vaswani et al., 2017), positional encodings are added to the input embeddings to provide the model with information about the relative or absolute position of tokens. NVIDIA's documentation on transformer-based models, such as those supported by the NeMo framework, emphasizes that positional encodings are typically implemented using sinusoidal functions or learned embeddings to preserve sequence order, which is essential for tasks like natural language processing (NLP). Options B, C, and D are incorrect because positional encoding does not address overfitting, dimensionality reduction, or throughput directly; these are handled by other techniques like regularization, dimensionality reduction methods, or hardware optimization.",
+      topic: "Training Techniques",
+      multiSelect: false
+      },
+      {
+      id: 115,
+      question: "What is Retrieval Augmented Generation (RAG)?",
+      options: [
+        "RAG is an architecture used to optimize the output of an LLM by retraining the model with domain-specific data.",
+        "RAG is a methodology that combines an information retrieval component with a response generator.",
+        "RAG is a method for manipulating and generating text-based data using Transformer-based LLMs.",
+        "RAG is a technique used to fine-tune pre-trained LLMs for improved performance."
+      ],
+      correctAnswer: 1,
+      correctAnswers: [1],
+      explanation: "Retrieval-Augmented Generation (RAG) is a methodology that enhances the performance of large language models (LLMs) by integrating an information retrieval component with a generative model. As described in the seminal paper by Lewis et al. (2020), RAG retrieves relevant documents from an external knowledge base (e.g., using dense vector representations) and uses them to inform the generative process, enabling more accurate and contextually relevant responses. NVIDIA’s documentation on generative AI workflows, particularly in the context of NeMo and Triton Inference Server, highlights RAG as a technique to improve LLM outputs by grounding them in external data, especially for tasks requiring factual accuracy or domain-specific knowledge. Option A is incorrect because RAG does not involve retraining the model but rather augments it with retrieved data. Option C is too vague and does not capture the retrieval aspect, while Option D refers to fine-tuning, which is a separate process.",
+      topic: "NLP Applications",
+      multiSelect: false
+      },
+      {
+      id: 116,
+      question: "In the context of fine-tuning LLMs, which of the following metrics is most commonly used to assess the performance of a fine-tuned model?",
+      options: [
+        "Model size.",
+        "Accuracy on a validation set.",
+        "Training duration.",
+        "Number of layers."
+      ],
+      correctAnswer: 1,
+      correctAnswers: [1],
+      explanation: "When fine-tuning large language models (LLMs), the primary goal is to improve the model’s performance on a specific task. The most common metric for assessing this performance is accuracy on a validation set, as it directly measures how well the model generalizes to unseen data.",
+      topic: "Fine-tuning",
+      multiSelect: false
+      }
   ]
 };
