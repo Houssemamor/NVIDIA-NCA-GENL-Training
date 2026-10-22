@@ -2,7 +2,7 @@
  * Combined NCA-AIIO question bank.
  *
  * The combined bank is assembled at page load from two source files:
- *   - questions-aiio.js: 75 original practice questions.
+ *   - questions-aiio.js: 90 original practice questions.
  *   - questions-aiio-community.js: 50 questions adapted from a CC BY 4.0
  *     source. See that file and the site credits for attribution.
  *
@@ -13,7 +13,7 @@ const QUESTIONS_DB_AIIO = {
   metadata: {
     exam: "NCA-AIIO",
     examName: "NVIDIA Certified Associate: AI Infrastructure and Operations",
-    totalQuestions: 125,
+    totalQuestions: 140,
     lastUpdated: "2026-10-22",
     source: "Original practice questions plus CC BY 4.0 community questions",
     // Visible attribution is rendered from this list by the AIIO pages.
@@ -38,9 +38,9 @@ const QUESTIONS_DB_AIIO = {
       }
     ],
     domains: [
-      { name: "Essential AI Knowledge", weight: 38, count: 39 },
-      { name: "AI Infrastructure", weight: 40, count: 54 },
-      { name: "AI Operations", weight: 22, count: 32 }
+      { name: "Essential AI Knowledge", weight: 38, count: 44 },
+      { name: "AI Infrastructure", weight: 40, count: 60 },
+      { name: "AI Operations", weight: 22, count: 36 }
     ],
     topics: QUESTIONS_DB_AIIO_CORE.metadata.topics
   },

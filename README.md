@@ -9,32 +9,33 @@ A lightweight web-based study hub for two NVIDIA Certified Associate tracks:
 
 - Study mode with a quick reference sheet and practice questions
 - Mock exam mode with timer, randomization, and answer review
+- AIIO mock exam sampling weighted to the 38/40/22 blueprint (19/20/11 questions)
 - Progress tracking using browser `localStorage`
 - Separate GENL and AIIO tracks with independent saved progress
-- 116 GENL questions and 125 AIIO questions
+- 130 GENL questions and 140 AIIO questions
 
 ## Project Structure
 
 ```text
 NVIDIA-NCA-GENL-Training/
-├── docs/
-│   ├── index.html                 GENL home
-│   ├── study.html                 GENL study mode
-│   ├── exam.html                  GENL mock exam
-│   ├── aiio.html                  AIIO home
-│   ├── aiio-study.html            AIIO study mode
-│   ├── aiio-exam.html             AIIO mock exam
-│   ├── css/
-│   │   └── styles.css
-│   └── js/
-│       ├── questions.js           GENL bank
-│       ├── questions-aiio.js      Original AIIO bank
-│       ├── questions-aiio-community.js  CC BY 4.0 AIIO bank
-│       ├── questions-aiio-combined.js   Combined AIIO bank
-│       ├── study.js
-│       └── exam.js
-└── tests/
-    └── validate-question-banks.mjs
+|-- docs/
+|   |-- index.html                 GENL home
+|   |-- study.html                 GENL study mode
+|   |-- exam.html                  GENL mock exam
+|   |-- aiio.html                  AIIO home
+|   |-- aiio-study.html            AIIO study mode
+|   |-- aiio-exam.html             AIIO mock exam
+|   |-- css/
+|   |   `-- styles.css
+|   `-- js/
+|       |-- questions.js           GENL bank
+|       |-- questions-aiio.js      Original AIIO bank
+|       |-- questions-aiio-community.js  CC BY 4.0 AIIO bank
+|       |-- questions-aiio-combined.js   Combined AIIO bank
+|       |-- study.js
+|       `-- exam.js
+`-- tests/
+    `-- validate-question-banks.mjs
 ```
 
 ## Run Locally

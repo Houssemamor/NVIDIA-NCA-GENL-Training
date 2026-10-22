@@ -8,23 +8,33 @@
  * Blueprint reference:
  * https://www.nvidia.com/en-us/learn/certification/ai-infrastructure-operations-associate/
  *
- * Domain weights:
- *   Essential AI Knowledge - 38 percent - 29 questions
- *   AI Infrastructure      - 40 percent - 30 questions
- *   AI Operations          - 22 percent - 16 questions
+ * Official domain weights:
+ *   Essential AI Knowledge - 38 percent
+ *   AI Infrastructure      - 40 percent
+ *   AI Operations          - 22 percent
+ *
+ * Current question counts:
+ *   Essential AI Knowledge - 34
+ *   AI Infrastructure      - 36
+ *   AI Operations          - 20
+ *
+ * Additional review references:
+ *   - NVIDIA NCA-AIIO Exam Study Guide (January 2026)
+ *   - NVIDIA DCGM, MIG, BlueField, DOCA, GPUDirect, NCCL, and TensorRT docs
+ *   - Kubernetes, Slurm, and Prometheus documentation
  */
 
 const QUESTIONS_DB_AIIO_CORE = {
   metadata: {
     exam: "NCA-AIIO",
     examName: "NVIDIA Certified Associate: AI Infrastructure and Operations",
-    totalQuestions: 75,
+    totalQuestions: 90,
     source: "NVIDIA NCA-AIIO Exam Study Guide and NVIDIA product documentation",
     lastUpdated: "2026-10-22",
     domains: [
-      { name: "Essential AI Knowledge", weight: 38, count: 29 },
-      { name: "AI Infrastructure", weight: 40, count: 30 },
-      { name: "AI Operations", weight: 22, count: 16 }
+      { name: "Essential AI Knowledge", weight: 38, count: 34 },
+      { name: "AI Infrastructure", weight: 40, count: 36 },
+      { name: "AI Operations", weight: 22, count: 20 }
     ],
     topics: [
       "AI, ML & DL Concepts",
@@ -1312,6 +1322,258 @@ const QUESTIONS_DB_AIIO_CORE = {
       correctAnswers: [0],
       explanation: "GPU virtualization requires matching the sharing model (passthrough, vGPU, MIG, or time-slicing) to isolation and performance needs, and confirming that the hypervisor, driver, and application support it. GPU live migration is more limited than CPU live migration, and maximizing VM count without measurement can destroy performance.",
       topic: "Virtualization",
+      domain: "AI Operations",
+      multiSelect: false
+    },
+
+    // ---------------------------------------------------------------
+    // Essential AI Knowledge: additional blueprint coverage
+    // ---------------------------------------------------------------
+    {
+      id: 126,
+      question: "Which NVIDIA offering provides containerized, optimized inference microservices and standard APIs for deploying foundation models?",
+      options: [
+        "NVIDIA NIM",
+        "NVIDIA DOCA",
+        "NVIDIA UFM",
+        "NVIDIA GPUDirect Storage"
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "NVIDIA NIM packages optimized inference engines and runtimes as containerized microservices with standard APIs, so teams can deploy supported foundation models without building the serving stack from scratch. DOCA programs DPUs, UFM manages InfiniBand fabrics, and GPUDirect Storage provides a direct storage-to-GPU data path.",
+      topic: "NVIDIA Solutions & Use Cases",
+      domain: "Essential AI Knowledge",
+      multiSelect: false
+    },
+    {
+      id: 127,
+      question: "Which technique reduces repeated computation during autoregressive LLM inference by storing attention keys and values from earlier tokens?",
+      options: [
+        "KV caching",
+        "Gradient accumulation",
+        "Weight pruning",
+        "Data parallelism"
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "Autoregressive decoding reuses the keys and values of previous tokens at each step. A KV cache stores those tensors so the model does not recompute the full prefix for every new token, reducing latency and redundant computation. Gradient accumulation, pruning, and data parallelism address training or model size, not per-token decoding reuse.",
+      topic: "Training vs Inference",
+      domain: "Essential AI Knowledge",
+      multiSelect: false
+    },
+    {
+      id: 128,
+      question: "A model is too large to fit on one GPU. Which strategy splits its layers or parameters across multiple GPUs?",
+      options: [
+        "Model parallelism",
+        "Data parallelism",
+        "Gradient accumulation",
+        "Checkpointing"
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "Model parallelism partitions the model itself across devices, often by layer or tensor, so a single model can exceed the memory of one GPU. Data parallelism replicates the model and splits the input batch instead. Gradient accumulation reduces memory per step, and checkpointing saves state; neither splits the model across devices.",
+      topic: "AI Lifecycle & Adoption",
+      domain: "Essential AI Knowledge",
+      multiSelect: false
+    },
+    {
+      id: 129,
+      question: "An inference service reports low average latency per request but cannot handle the target request rate. Which metric is failing?",
+      options: [
+        "Throughput",
+        "Model accuracy",
+        "GPU memory capacity",
+        "Training loss"
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "Latency measures how long one request takes, while throughput measures how many requests the service completes per unit time. A service can have low latency at low load and still saturate before reaching the required request rate. Batching, more replicas, or more efficient serving can improve throughput, with latency tradeoffs to measure.",
+      topic: "Training vs Inference",
+      domain: "Essential AI Knowledge",
+      multiSelect: false
+    },
+    {
+      id: 130,
+      question: "Why must an LLM use the same tokenizer and vocabulary that were used during pretraining?",
+      options: [
+        "Because token IDs map to specific vocabulary entries, and a different tokenizer changes the meaning of those IDs.",
+        "Because the tokenizer controls GPU clock speed.",
+        "Because a different tokenizer automatically increases model accuracy.",
+        "Because the tokenizer stores the model's optimizer state."
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "A model learns embeddings for a fixed vocabulary of token IDs. If a different tokenizer maps text to different IDs, the model receives embeddings for the wrong tokens and outputs degrade. The tokenizer does not set GPU clocks, guarantee accuracy, or hold optimizer state.",
+      topic: "AI, ML & DL Concepts",
+      domain: "Essential AI Knowledge",
+      multiSelect: false
+    },
+
+    // ---------------------------------------------------------------
+    // AI Infrastructure: additional blueprint coverage
+    // ---------------------------------------------------------------
+    {
+      id: 131,
+      question: "Which statement correctly compares a SuperNIC such as ConnectX-7 with a BlueField DPU?",
+      options: [
+        "Both provide high-speed network and RDMA functions, while a DPU adds Arm cores and infrastructure offload.",
+        "A SuperNIC includes Arm cores for running firewalls, while a DPU is only a cable.",
+        "A DPU provides GPU memory expansion, while a SuperNIC provides storage capacity.",
+        "Both are storage controllers and cannot be used for networking."
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "A SuperNIC is a network accelerator optimized for GPU-to-GPU and RDMA traffic. A BlueField DPU provides similar network acceleration and adds programmable Arm cores and hardware accelerators for infrastructure services such as networking, storage, and security. Neither expands GPU memory or acts as a storage controller.",
+      topic: "DPUs",
+      domain: "AI Infrastructure",
+      multiSelect: false
+    },
+    {
+      id: 132,
+      question: "Which two Ethernet mechanisms are commonly used together to reduce packet loss and manage congestion on a RoCE fabric? (Select two.)",
+      options: [
+        "Priority Flow Control (PFC)",
+        "Explicit Congestion Notification (ECN)",
+        "VLAN tagging",
+        "Jumbo frame discovery"
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0, 1],
+      explanation: "PFC pauses selected traffic classes when a queue approaches congestion, helping preserve the lossless behavior that RDMA expects. ECN marks packets instead of dropping them so senders can reduce their rate before buffers overflow. VLAN tagging and jumbo frame discovery do not provide this congestion control.",
+      topic: "Data Center Protocols",
+      domain: "AI Infrastructure",
+      multiSelect: true
+    },
+    {
+      id: 133,
+      question: "What is the primary role of a coolant distribution unit (CDU) in a direct-to-chip liquid cooling system?",
+      options: [
+        "It transfers heat between the facility loop and the rack loop while managing flow, pressure, and coolant temperature.",
+        "It supplies DC power to the GPUs.",
+        "It provides the network switch for the management plane.",
+        "It stores training checkpoints on local disks."
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "A CDU separates the facility water loop from the rack or secondary loop and manages flow, pressure, filtration, and temperature. It moves heat from the rack to the facility loop but does not supply GPU power, provide management networking, or store checkpoints.",
+      topic: "Power & Cooling",
+      domain: "AI Infrastructure",
+      multiSelect: false
+    },
+    {
+      id: 134,
+      question: "In a Slurm-managed AI cluster, what is the primary role of a login node?",
+      options: [
+        "It provides user access for job submission, file editing, and cluster commands, while compute nodes run the training jobs.",
+        "It executes all GPU training work and the login node only stores logs.",
+        "It replaces the cluster network with a direct GPU link.",
+        "It runs the GPU driver and is never used by users."
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "A login node is the user-facing entry point for submitting jobs, editing files, and running cluster commands. Compute nodes run the scheduled workloads. Keeping heavy jobs off the login node prevents interactive users from starving the scheduler and degrading the shared entry point. It does not replace the cluster network or own GPU execution.",
+      topic: "Cluster Components",
+      domain: "AI Infrastructure",
+      multiSelect: false
+    },
+    {
+      id: 135,
+      question: "What is the purpose of hot-aisle containment in an air-cooled data center?",
+      options: [
+        "It prevents hot exhaust air from mixing with cold intake air, improving cooling efficiency.",
+        "It increases the electrical power delivered to each rack.",
+        "It provides a dedicated network path for GPU traffic.",
+        "It converts alternating current to direct current for the servers."
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "Hot-aisle containment separates hot exhaust from cold supply air, reducing recirculation and allowing cooling systems to operate more efficiently. It does not change electrical power delivery, provide a data network, or perform power conversion.",
+      topic: "Power & Cooling",
+      domain: "AI Infrastructure",
+      multiSelect: false
+    },
+    {
+      id: 136,
+      question: "A server has multiple GPUs but no NVLink or NVSwitch. Which impact is most likely for a model-parallel workload?",
+      options: [
+        "GPU-to-GPU communication uses PCIe and can become a bandwidth and latency bottleneck.",
+        "The GPUs automatically gain NVLink bandwidth through the PCIe bus.",
+        "Model parallelism no longer requires any inter-GPU communication.",
+        "The server can no longer use a network interface."
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "Without NVLink or NVSwitch, GPU-to-GPU traffic must traverse PCIe, which generally has lower bandwidth and higher latency than the dedicated GPU interconnect. Model-parallel workloads exchange activations or gradients frequently, so PCIe can limit scaling. PCIe does not provide NVLink bandwidth, eliminate communication, or disable the network interface.",
+      topic: "GPU Systems & Scaling",
+      domain: "AI Infrastructure",
+      multiSelect: false
+    },
+
+    // ---------------------------------------------------------------
+    // AI Operations: additional blueprint coverage
+    // ---------------------------------------------------------------
+    {
+      id: 137,
+      question: "Which I/O virtualization technique exposes virtual functions that can be assigned to a VM with less hypervisor involvement?",
+      options: [
+        "SR-IOV",
+        "Time-slicing",
+        "NUMA",
+        "RDMA"
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "SR-IOV allows a physical device to present virtual functions that can be assigned directly to virtual machines, reducing hypervisor interception and improving I/O performance. Time-slicing multiplexes a device over time, NUMA describes memory locality, and RDMA is a remote memory access mechanism.",
+      topic: "Virtualization",
+      domain: "AI Operations",
+      multiSelect: false
+    },
+    {
+      id: 138,
+      question: "Which statement about live migration of GPU-accelerated virtual machines is most accurate?",
+      options: [
+        "It depends on the GPU model, vGPU software, hypervisor, and workload support and is not universally equivalent to CPU live migration.",
+        "It works identically to CPU live migration on every GPU and hypervisor.",
+        "It requires no shared storage or network configuration.",
+        "It is always enabled by default for every passthrough GPU."
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "GPU live migration requires a supported combination of GPU, vGPU software, hypervisor, and guest configuration, and some workloads cannot be migrated transparently. It also depends on shared storage and network setup. It is not universal, not automatic for passthrough GPUs, and not identical to CPU live migration.",
+      topic: "Virtualization",
+      domain: "AI Operations",
+      multiSelect: false
+    },
+    {
+      id: 139,
+      question: "How can an operator prevent general-purpose workloads from consuming expensive GPU nodes in Kubernetes?",
+      options: [
+        "Taint the GPU nodes and add tolerations only to the GPU workloads that should use them.",
+        "Remove all CPU nodes from the cluster.",
+        "Disable the Kubernetes scheduler.",
+        "Give every pod a toleration for every taint."
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "A taint on a GPU node repels pods that do not tolerate it, and a matching toleration allows selected GPU workloads to schedule there. This protects scarce accelerators from unrelated workloads. Removing CPU nodes, disabling the scheduler, or tolerating every taint defeats scheduling and isolation.",
+      topic: "Orchestration & Scheduling",
+      domain: "AI Operations",
+      multiSelect: false
+    },
+    {
+      id: 140,
+      question: "Which telemetry signal best reconstructs the path and timing of a single inference request across an API gateway, retrieval service, and model server?",
+      options: [
+        "Distributed traces",
+        "Static configuration files",
+        "GPU ECC counters",
+        "Firmware version logs"
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "Distributed tracing follows a request across services by propagating a trace context and recording spans for each operation. It shows where time is spent and which service failed. Configuration files describe settings, ECC counters report memory errors, and firmware version logs record inventory, not request flow.",
+      topic: "Data Center Monitoring",
       domain: "AI Operations",
       multiSelect: false
     }

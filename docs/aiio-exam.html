@@ -32,7 +32,7 @@
     <!-- SETUP SCREEN -->
     <div id="examSetup" class="exam-setup">
       <h2>NCA-AIIO Mock Exam</h2>
-      <p>Simulate the real NCA-AIIO certification exam with randomized questions, shuffled answers, and a countdown timer.</p>
+      <p>Simulate the real NCA-AIIO certification exam with blueprint-weighted questions, shuffled answers, and a countdown timer.</p>
 
       <div class="exam-info-grid">
         <div class="exam-info-item">
@@ -76,7 +76,13 @@
       <!-- Top Bar -->
       <div class="exam-topbar">
         <div class="timer" id="timer">
-          <span class="timer-icon">&#9202;</span>
+          <span class="timer-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+              <circle cx="12" cy="13" r="8"/>
+              <path d="M12 9v4l2.5 1.5"/>
+              <path d="M9 2h6"/>
+            </svg>
+          </span>
           <span id="timerDisplay">60:00</span>
         </div>
         <div class="exam-progress">
@@ -103,9 +109,25 @@
 
       <!-- Navigation -->
       <div class="exam-nav">
-        <button class="nav-btn" id="prevBtn" onclick="prevQuestion()">&#8592; Previous</button>
-        <button class="mark-review-btn" id="markBtn" onclick="toggleMark()">&#9873; Mark for Review</button>
-        <button class="nav-btn" id="nextBtn" onclick="nextQuestion()">Next -&gt;</button>
+        <button class="nav-btn" id="prevBtn" onclick="prevQuestion()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+          Previous
+        </button>
+        <button class="mark-review-btn" id="markBtn" onclick="toggleMark()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M5 21V4"/>
+            <path d="M5 4h11l-1.5 3L16 10H5"/>
+          </svg>
+          <span id="markBtnLabel">Mark for Review</span>
+        </button>
+        <button class="nav-btn" id="nextBtn" onclick="nextQuestion()">
+          Next
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
       </div>
 
       <!-- Submit -->
@@ -194,7 +216,13 @@
       storagePrefix: 'nca_aiio',
       questionCount: 50,
       timeLimitSeconds: 3600,
-      targetPercent: 80
+      targetPercent: 80,
+      // Blueprint weighting: 38% Essential AI, 40% Infrastructure, 22% Operations.
+      domainQuotas: {
+        'Essential AI Knowledge': 19,
+        'AI Infrastructure': 20,
+        'AI Operations': 11
+      }
     };
   </script>
   <script src="js/questions-aiio.js"></script>

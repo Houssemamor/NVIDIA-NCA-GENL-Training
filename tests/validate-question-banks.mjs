@@ -21,17 +21,17 @@ const banks = [
     label: "NCA-GENL",
     files: [resolve(projectRoot, "docs/js/questions.js")],
     globalName: "QUESTIONS_DB",
-    expectedTotal: 116
+    expectedTotal: 130
   },
   {
     label: "NCA-AIIO core",
     files: [resolve(projectRoot, "docs/js/questions-aiio.js")],
     globalName: "QUESTIONS_DB_AIIO_CORE",
-    expectedTotal: 75,
+    expectedTotal: 90,
     expectedDomains: {
-      "Essential AI Knowledge": 29,
-      "AI Infrastructure": 30,
-      "AI Operations": 16
+      "Essential AI Knowledge": 34,
+      "AI Infrastructure": 36,
+      "AI Operations": 20
     }
   },
   {
@@ -54,11 +54,17 @@ const banks = [
       resolve(projectRoot, "docs/js/questions-aiio-combined.js")
     ],
     globalName: "QUESTIONS_DB_AIIO",
-    expectedTotal: 125,
+    expectedTotal: 140,
     expectedDomains: {
-      "Essential AI Knowledge": 39,
-      "AI Infrastructure": 54,
-      "AI Operations": 32
+      "Essential AI Knowledge": 44,
+      "AI Infrastructure": 60,
+      "AI Operations": 36
+    },
+    // The AIIO mock exam draws 50 questions at 38/40/22 weighting.
+    expectedDomainQuotas: {
+      "Essential AI Knowledge": 19,
+      "AI Infrastructure": 20,
+      "AI Operations": 11
     },
     expectedCommunityCount: 50
   }
@@ -177,6 +183,15 @@ for (const bank of banks) {
         domain.count,
         domainCounts[domain.name],
         bank.label + ": metadata count is wrong for " + domain.name
+      );
+    }
+  }
+
+  if (bank.expectedDomainQuotas) {
+    for (const [domain, quota] of Object.entries(bank.expectedDomainQuotas)) {
+      assert.ok(
+        domainCounts[domain] >= quota,
+        bank.label + ": not enough " + domain + " questions for the mock exam quota"
       );
     }
   }

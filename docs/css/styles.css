@@ -277,6 +277,13 @@ button:focus-visible {
   justify-content: center;
   background: var(--nv-green-glow);
   border-radius: 50%;
+  color: var(--nv-green);
+}
+
+.mode-card .icon svg {
+  width: 40px;
+  height: 40px;
+  display: block;
 }
 
 .mode-card h2 {
@@ -825,7 +832,15 @@ button:focus-visible {
 }
 
 .timer-icon {
-  font-size: 1.2rem;
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+}
+
+.timer-icon svg {
+  width: 20px;
+  height: 20px;
+  display: block;
 }
 
 .timer.warning {
@@ -898,6 +913,12 @@ button:focus-visible {
   transition: var(--transition);
 }
 
+.nav-btn svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
 .nav-btn:hover {
   background: var(--bg-card-hover);
   border-color: var(--nv-green);
@@ -914,6 +935,10 @@ button:focus-visible {
 }
 
 .mark-review-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   padding: 10px 20px;
   background: none;
   border: 2px solid var(--warning);
@@ -923,6 +948,12 @@ button:focus-visible {
   font-size: 0.9rem;
   font-weight: 600;
   transition: var(--transition);
+}
+
+.mark-review-btn svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
 }
 
 .mark-review-btn:hover,

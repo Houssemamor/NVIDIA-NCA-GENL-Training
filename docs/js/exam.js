@@ -13,6 +13,7 @@
   var storagePrefix = trackConfig.storagePrefix || 'nca_genl';
   var questionCount = trackConfig.questionCount || 50;
   var timeLimitSeconds = trackConfig.timeLimitSeconds || 3600;
+  var domainQuotas = trackConfig.domainQuotas || null;
 
   // ---- State ----
   var state = {
@@ -80,11 +81,12 @@
       return false;
     }
 
-    // Pick the configured number of random questions (or all if fewer)
+    // Select the configured number of questions. A track may provide domain
+    // quotas so the sample follows the published exam blueprint. Without
+    // quotas, selection remains a uniform random sample.
     var allQ = db.questions.slice();
-    shuffleArray(allQ);
     state.totalQuestions = questionCount;
-    var selected = allQ.slice(0, state.totalQuestions);
+    var selected = selectExamQuestions(allQ, state.totalQuestions, domainQuotas);
 
     // Shuffle options for each question
     state.questions = selected.map(function(q) {
@@ -98,6 +100,57 @@
     state.startTime = Date.now();
     state.finished = false;
     return true;
+  }
+
+  function selectExamQuestions(pool, count, quotas) {
+    // Fall back to a uniform sample when quotas are absent or do not add up
+    // to the requested question count. This keeps the GENL exam unchanged.
+    if (!quotas) {
+      shuffleArray(pool);
+      return pool.slice(0, count);
+    }
+
+    var domains = Object.keys(quotas);
+    var quotaTotal = domains.reduce(function(sum, domain) {
+      return sum + quotas[domain];
+    }, 0);
+
+    if (quotaTotal !== count) {
+      shuffleArray(pool);
+      return pool.slice(0, count);
+    }
+
+    var byDomain = {};
+    pool.forEach(function(question) {
+      var domain = question.domain || 'Unassigned';
+      if (!byDomain[domain]) byDomain[domain] = [];
+      byDomain[domain].push(question);
+    });
+
+    var selected = [];
+    domains.forEach(function(domain) {
+      var domainPool = byDomain[domain] || [];
+      shuffleArray(domainPool);
+      selected = selected.concat(domainPool.slice(0, quotas[domain]));
+    });
+
+    // If a domain is short, fill the gap from the remaining questions so the
+    // exam still has the requested number of questions.
+    var selectedIds = {};
+    selected.forEach(function(question) {
+      selectedIds[question.id] = true;
+    });
+    var remaining = pool.filter(function(question) {
+      return !selectedIds[question.id];
+    });
+    shuffleArray(remaining);
+
+    while (selected.length < count && remaining.length > 0) {
+      selected.push(remaining.shift());
+    }
+
+    shuffleArray(selected);
+    return selected.slice(0, count);
   }
 
   function shuffleQuestion(q) {
@@ -120,6 +173,7 @@
       correctAnswer: newCorrectAnswers[0],
       explanation: q.explanation,
       topic: q.topic,
+      domain: q.domain,
       multiSelect: q.multiSelect
     };
   }
@@ -165,6 +219,8 @@
 
     document.getElementById('qNumber').textContent = 'Q' + (state.currentIndex + 1);
     document.getElementById('qTopic').textContent = q.topic;
+    // Expose the domain on the question panel for blueprint diagnostics.
+    document.getElementById('examQuestion').setAttribute('data-domain', q.domain || '');
 
     var multiTag = q.multiSelect ?
       '<span class="multi-select-badge">Select ' + q.correctAnswers.length + '</span>' : '';
@@ -197,16 +253,16 @@
 
     // Update nav buttons
     document.getElementById('prevBtn').disabled = state.currentIndex === 0;
-    document.getElementById('nextBtn').textContent = 'Next ->';
 
-    // Update mark button
+    // Update mark button label without replacing the inline SVG icon.
     var markBtn = document.getElementById('markBtn');
+    var markLabel = document.getElementById('markBtnLabel');
     if (state.marked[state.currentIndex]) {
       markBtn.classList.add('marked');
-      markBtn.innerHTML = '&#9873; Marked';
+      if (markLabel) markLabel.textContent = 'Marked';
     } else {
       markBtn.classList.remove('marked');
-      markBtn.innerHTML = '&#9873; Mark for Review';
+      if (markLabel) markLabel.textContent = 'Mark for Review';
     }
 
     updateQuestionGrid();

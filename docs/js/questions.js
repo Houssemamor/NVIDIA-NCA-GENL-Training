@@ -1,6 +1,6 @@
 const QUESTIONS_DB = {
   metadata: {
-    totalQuestions: 116,
+    totalQuestions: 130,
     topics: [
       "Attention Mechanisms",
       "Data Analysis",
@@ -19,7 +19,7 @@ const QUESTIONS_DB = {
       "Training Techniques",
       "Transformer Architecture"
     ],
-    lastUpdated: "2026-03-07"
+    lastUpdated: "2026-10-22"
   },
   questions: [
     {
@@ -1738,32 +1738,242 @@ const QUESTIONS_DB = {
       },
       {
       id: 115,
-      question: "What is Retrieval Augmented Generation (RAG)?",
+      question: "A RAG system answers simple questions well, but it misses answers that span two sections of a long policy document. Which change is most likely to improve retrieval?",
       options: [
-        "RAG is an architecture used to optimize the output of an LLM by retraining the model with domain-specific data.",
-        "RAG is a methodology that combines an information retrieval component with a response generator.",
-        "RAG is a method for manipulating and generating text-based data using Transformer-based LLMs.",
-        "RAG is a technique used to fine-tune pre-trained LLMs for improved performance."
+        "Replace the retriever with a larger language model.",
+        "Split documents into smaller overlapping chunks and retrieve several chunks for each query.",
+        "Increase the model temperature so the answer covers more content.",
+        "Remove document metadata to reduce index size."
       ],
       correctAnswer: 1,
       correctAnswers: [1],
-      explanation: "Retrieval-Augmented Generation (RAG) is a methodology that enhances the performance of large language models (LLMs) by integrating an information retrieval component with a generative model. As described in the seminal paper by Lewis et al. (2020), RAG retrieves relevant documents from an external knowledge base (e.g., using dense vector representations) and uses them to inform the generative process, enabling more accurate and contextually relevant responses. NVIDIA's documentation on generative AI workflows, particularly in the context of NeMo and Triton Inference Server, highlights RAG as a technique to improve LLM outputs by grounding them in external data, especially for tasks requiring factual accuracy or domain-specific knowledge. Option A is incorrect because RAG does not involve retraining the model but rather augments it with retrieved data. Option C is too vague and does not capture the retrieval aspect, while Option D refers to fine-tuning, which is a separate process.",
+      explanation: "Retrieval quality depends on chunking and recall. Smaller overlapping chunks preserve local context at boundaries, and retrieving multiple chunks gives the generator the evidence needed when an answer spans sections. A larger generator does not fix missing context, temperature affects sampling rather than retrieval, and metadata is often useful for filtering and provenance.",
       topic: "NLP Applications",
       multiSelect: false
       },
       {
       id: 116,
-      question: "In the context of fine-tuning LLMs, which of the following metrics is most commonly used to assess the performance of a fine-tuned model?",
+      question: "In reinforcement learning from human feedback (RLHF), what is the main role of the reward model?",
       options: [
-        "Model size.",
-        "Accuracy on a validation set.",
-        "Training duration.",
-        "Number of layers."
+        "It stores the human preference labels and replaces the language model.",
+        "It predicts a preference score for model outputs and guides policy optimization.",
+        "It tokenizes the pretraining corpus before supervised fine-tuning.",
+        "It compiles the final model for inference on NVIDIA GPUs."
       ],
       correctAnswer: 1,
       correctAnswers: [1],
-      explanation: "When fine-tuning large language models (LLMs), the primary goal is to improve the model's performance on a specific task. The most common metric for assessing this performance is accuracy on a validation set, as it directly measures how well the model generalizes to unseen data.",
-      topic: "Fine-tuning",
+      explanation: "RLHF trains a reward model on human comparisons so it can assign a scalar preference score to candidate responses. The language model policy is then optimized against that score, usually with a constraint that prevents it from drifting too far from the supervised model. The reward model does not replace the policy, tokenize the corpus, or perform inference compilation.",
+      topic: "Training Techniques",
+      multiSelect: false
+      },
+      {
+      id: 117,
+      question: "A support assistant must answer only from approved policy documents and refuse when the documents do not contain the answer. Which prompt design is most reliable?",
+      options: [
+        "Ask the model to answer from its general knowledge and add a disclaimer.",
+        "Provide the retrieved passages, require the answer to be supported by them, and instruct the model to refuse when support is missing.",
+        "Increase the maximum output length so the model can explain more.",
+        "Remove the retrieved passages to avoid confusing the model."
+      ],
+      correctAnswer: 1,
+      correctAnswers: [1],
+      explanation: "Grounding the prompt in retrieved evidence and making the refusal condition explicit gives the model a clear decision rule. It also makes unsupported claims easier to detect. General knowledge increases hallucination risk, longer output does not improve grounding, and removing evidence defeats the purpose of retrieval.",
+      topic: "Prompt Engineering",
+      multiSelect: false
+      },
+      {
+      id: 118,
+      question: "A team needs a model to return a JSON object with a fixed schema. Which prompt addition is most likely to improve reliability?",
+      options: [
+        "A request to be creative and vary the output format.",
+        "The exact schema, a valid example, and an instruction to return only JSON.",
+        "A longer temperature setting.",
+        "A request to explain the answer before each field."
+      ],
+      correctAnswer: 1,
+      correctAnswers: [1],
+      explanation: "Schema-aware prompts reduce ambiguity by showing the required keys, types, and structure. A valid example demonstrates the expected format, and an explicit output-only-JSON constraint reduces prose wrappers. Creativity, higher temperature, and extra explanation tend to increase format variance.",
+      topic: "Prompt Engineering",
+      multiSelect: false
+      },
+      {
+      id: 119,
+      question: "A team needs to extract organization names from support tickets and then compute cosine similarity between the resulting embeddings. Which library pairing fits both tasks?",
+      options: [
+        "spaCy for named entity recognition and NumPy for vector operations.",
+        "NumPy for named entity recognition and spaCy for matrix multiplication.",
+        "Matplotlib for named entity recognition and spaCy for vector storage.",
+        "Pandas for named entity recognition and Keras for string tokenization."
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "spaCy provides tokenization, linguistic annotations, and named entity recognition. NumPy provides efficient array and vector math, including the dot products and norms used in cosine similarity. The other pairings assign each task to a library that does not provide the required capability.",
+      topic: "Python Libraries",
+      multiSelect: false
+      },
+      {
+      id: 120,
+      question: "Why is NumPy vectorization usually faster than a Python loop for embedding arithmetic?",
+      options: [
+        "It automatically trains the model during the calculation.",
+        "It performs the operation in compiled code over contiguous arrays instead of interpreting Python operations per element.",
+        "It removes the need for memory allocation.",
+        "It converts every calculation to a network request."
+      ],
+      correctAnswer: 1,
+      correctAnswers: [1],
+      explanation: "NumPy stores numeric data in typed arrays and runs vectorized operations in compiled code, which reduces Python interpreter overhead and improves memory access. It still allocates memory, does not train a model, and does not use the network. The speedup depends on array size and operation.",
+      topic: "Python Libraries",
+      multiSelect: false
+      },
+      {
+      id: 121,
+      question: "Which practice best prevents a RAG service from silently degrading after a prompt or retrieval change?",
+      options: [
+        "Deploy the change and wait for user complaints.",
+        "Run automated regression tests against a labeled evaluation set before deployment.",
+        "Increase the model size for every change.",
+        "Disable logging so the tests run faster."
+      ],
+      correctAnswer: 1,
+      correctAnswers: [1],
+      explanation: "Prompt and retrieval changes can alter answer quality without causing a crash. A labeled evaluation set in continuous integration catches regressions in retrieval recall, answer correctness, and refusal behavior before users see them. Waiting for complaints is reactive, a larger model does not guarantee correctness, and disabling logging removes evidence.",
+      topic: "Software Development",
+      multiSelect: false
+      },
+      {
+      id: 122,
+      question: "A model server passes its startup check but returns errors while the model is still loading. Which Kubernetes probe should gate traffic until loading finishes?",
+      options: [
+        "A readiness probe that fails until the model can serve requests.",
+        "A liveness probe that restarts the container every second.",
+        "A startup probe that disables all logging.",
+        "A network policy that blocks all traffic permanently."
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "A readiness probe controls whether a pod receives traffic. While the model is loading, the probe should fail so the service does not route requests to an unready instance. A liveness probe checks whether the container should be restarted, not whether it is ready. Startup probes cover slow initialization but do not replace readiness for traffic gating.",
+      topic: "Software Development",
+      multiSelect: false
+      },
+      {
+      id: 123,
+      question: "In which situation is INT8 quantization least appropriate without further validation?",
+      options: [
+        "A model with tolerance for small numerical error and a representative calibration set.",
+        "A model whose accuracy is highly sensitive to precision and has no calibration data.",
+        "An inference service that needs lower memory use.",
+        "A model that will run on hardware with INT8 tensor cores."
+      ],
+      correctAnswer: 1,
+      correctAnswers: [1],
+      explanation: "Quantization can reduce memory and increase throughput, but it can also change outputs. A precision-sensitive model without calibration data has a high risk of unacceptable accuracy loss, so it needs evaluation, calibration, or a less aggressive precision. The other options describe common quantization use cases with appropriate safeguards.",
+      topic: "Model Optimization",
+      multiSelect: false
+      },
+      {
+      id: 124,
+      question: "What is the main difference between pruning and knowledge distillation?",
+      options: [
+        "Pruning removes weights or structures, while distillation trains a smaller student model to mimic a larger teacher.",
+        "Pruning trains a larger teacher, while distillation removes weights.",
+        "Both methods always increase the parameter count.",
+        "Pruning changes the tokenizer, while distillation changes the GPU driver."
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "Pruning reduces model size by removing weights, channels, or other structures. Distillation transfers behavior from a teacher model to a smaller student model. They can be combined, but they are different compression techniques. Neither always increases parameters or changes the tokenizer or driver.",
+      topic: "Model Optimization",
+      multiSelect: false
+      },
+      {
+      id: 125,
+      question: "A fraud detection model reports 99 percent accuracy but misses most fraudulent transactions. Which metric should the team examine first?",
+      options: [
+        "Overall accuracy on the test set.",
+        "Recall and precision for the fraud class, or precision-recall AUC.",
+        "Training time per epoch.",
+        "Number of model parameters."
+      ],
+      correctAnswer: 1,
+      correctAnswers: [1],
+      explanation: "With a rare positive class, a model can score high accuracy by predicting the majority class almost every time. Recall for the fraud class measures how many fraud cases were found, precision measures how many fraud alerts were correct, and PR-AUC summarizes performance across thresholds. Accuracy hides the failure, while training time and parameter count do not measure detection quality.",
+      topic: "Data Analysis",
+      multiSelect: false
+      },
+      {
+      id: 126,
+      question: "A team observes that two features are strongly correlated and concludes that one causes the other. What is the main flaw in that conclusion?",
+      options: [
+        "Correlation can be caused by a confounding variable and does not establish causation.",
+        "Correlation is only valid for categorical features.",
+        "A strong correlation always means the features are identical.",
+        "Correlation can only be measured with a neural network."
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "Correlation measures association, not cause and effect. A third variable can influence both features, or the relationship can be coincidental. Establishing causation requires a controlled experiment or a defensible causal design. Correlation is not limited to categorical features, does not imply identical values, and is not tied to neural networks.",
+      topic: "Data Analysis",
+      multiSelect: false
+      },
+      {
+      id: 127,
+      question: "What does informed data consent require when collecting user data for model training?",
+      options: [
+        "A broad notice that data may be used for any purpose forever.",
+        "Telling users what data is collected, how it will be used, and giving them a meaningful choice consistent with applicable law.",
+        "Collecting the data first and deciding the purpose later.",
+        "Relying on a checkbox that is selected by default."
+      ],
+      correctAnswer: 1,
+      correctAnswers: [1],
+      explanation: "Informed consent requires transparency about the data and purpose, a meaningful choice, and compliance with applicable privacy law. Purpose limitation matters because data collected for one use should not be repurposed without a valid basis. Broad perpetual notices, retroactive purpose decisions, and preselected boxes undermine informed choice.",
+      topic: "Ethics & Alignment",
+      multiSelect: false
+      },
+      {
+      id: 128,
+      question: "What is a key fairness risk of using synthetic data to augment an underrepresented group?",
+      options: [
+        "Synthetic data always removes every bias from the training set.",
+        "The generator can reproduce or amplify biases and may not represent the real group accurately.",
+        "Synthetic data cannot be used with neural networks.",
+        "Synthetic data eliminates the need to evaluate model outcomes."
+      ],
+      correctAnswer: 1,
+      correctAnswers: [1],
+      explanation: "Synthetic samples are generated from patterns in existing data or model assumptions, so they can inherit or magnify those biases. They may also miss real-world variation. Augmentation must be validated against real data and followed by outcome-based fairness evaluation. Synthetic data does not guarantee bias removal and is compatible with neural networks.",
+      topic: "Ethics & Alignment",
+      multiSelect: false
+      },
+      {
+      id: 129,
+      question: "Why is a held-out test set still useful after cross-validation?",
+      options: [
+        "It provides an unbiased final estimate after model selection has used the validation folds.",
+        "It replaces the need for any validation data.",
+        "It guarantees the model will not fail in production.",
+        "It increases the number of hyperparameters that can be tuned."
+      ],
+      correctAnswer: 0,
+      correctAnswers: [0],
+      explanation: "Cross-validation is often used to compare models and tune hyperparameters, so its estimate can become optimistic once many choices are made. A held-out test set that was not used for selection gives a cleaner final performance estimate. It does not replace validation during development, guarantee production success, or expand the hyperparameter search.",
+      topic: "Model Evaluation",
+      multiSelect: false
+      },
+      {
+      id: 130,
+      question: "Which evaluation best measures whether a RAG answer is faithful to its retrieved evidence?",
+      options: [
+        "The number of tokens in the retrieved passages.",
+        "Groundedness or faithfulness of each claim to the retrieved context, combined with retrieval recall.",
+        "The model's parameter count.",
+        "The wall-clock time of the retrieval call."
+      ],
+      correctAnswer: 1,
+      correctAnswers: [1],
+      explanation: "A faithful RAG answer should be supported by the retrieved context and should not introduce unsupported claims. Groundedness or faithfulness evaluates that support, while retrieval recall checks whether the needed evidence was retrieved at all. Token count, parameter count, and latency are operational or scale measures, not faithfulness measures.",
+      topic: "Model Evaluation",
       multiSelect: false
       }
   ]
