@@ -9,6 +9,7 @@ A lightweight web-based study hub for two NVIDIA Certified Associate tracks:
 
 - Study mode with a quick reference sheet and practice questions
 - Mock exam mode with timer, randomization, and answer review
+- AIIO mock exam sampling weighted to the 38/40/22 blueprint (19/20/11 questions)
 - Progress tracking using browser `localStorage`
 - Separate GENL and AIIO tracks with independent saved progress
 - 116 GENL questions and 125 AIIO questions
