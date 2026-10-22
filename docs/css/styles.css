@@ -43,6 +43,8 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  /* Keep anchored study sections clear of the sticky navigation bar. */
+  scroll-padding-top: 96px;
 }
 
 body {
@@ -52,6 +54,39 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+/* ---- Accessibility Utilities ---- */
+/* Keyboard users can bypass the repeated navigation on every page. */
+.skip-link {
+  position: absolute;
+  top: -60px;
+  left: 16px;
+  z-index: 1000;
+  padding: 10px 16px;
+  background: var(--nv-green);
+  color: #000;
+  font-weight: 700;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+  color: #000;
+}
+
+/* Visually hidden labels keep controls understandable to screen readers. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ---- Background Pattern ---- */
@@ -352,11 +387,80 @@ button:focus-visible {
   color: var(--text-secondary);
 }
 
-/* ---- Study Mode ---- */
+/* ---- Study Workspace ---- */
+.study-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 36px 0 24px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 28px;
+}
+
+.study-header-main {
+  flex: 1 1 420px;
+}
+
+.study-eyebrow {
+  display: inline-block;
+  color: var(--nv-green);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.study-header h1 {
+  font-size: 2.1rem;
+  margin-bottom: 8px;
+}
+
+.study-header p {
+  color: var(--text-secondary);
+  max-width: 62ch;
+}
+
+.study-summary {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 1px;
+  overflow: hidden;
+  background: var(--border-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.study-summary-item {
+  min-width: 92px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  text-align: center;
+}
+
+.study-summary-value {
+  display: block;
+  color: var(--nv-green);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.study-summary-label {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-secondary);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .study-tabs {
   display: flex;
   gap: 4px;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
   background: var(--bg-secondary);
   border-radius: var(--radius-md);
   padding: 4px;
@@ -365,6 +469,10 @@ button:focus-visible {
 
 .study-tab {
   flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   padding: 12px 20px;
   background: none;
   border: none;
@@ -385,12 +493,168 @@ button:focus-visible {
   color: #000;
 }
 
+.study-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.7rem;
+  height: 1.35rem;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.study-tab.active .study-tab-count {
+  background: rgba(0, 0, 0, 0.16);
+  color: #000;
+}
+
 .study-panel {
   display: none;
 }
 
 .study-panel.active {
   display: block;
+}
+
+/* Native [hidden] must win over the active class during tab changes. */
+.study-panel[hidden] {
+  display: none;
+}
+
+/* ---- Study Toolbar ---- */
+.study-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.study-search {
+  position: relative;
+  flex: 1 1 320px;
+  max-width: 540px;
+}
+
+.study-search svg {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.study-search-input {
+  width: 100%;
+  padding: 11px 14px 11px 42px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.study-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.study-search-input:focus {
+  outline: none;
+  border-color: var(--nv-green);
+  box-shadow: 0 0 0 3px var(--nv-green-glow);
+}
+
+.study-toolbar-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 0 0 auto;
+}
+
+.study-result-count {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.study-clear-btn {
+  padding: 4px 0;
+  background: none;
+  border: 0;
+  color: var(--nv-green);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.study-clear-btn:hover {
+  color: var(--nv-green-light);
+}
+
+.study-clear-btn:disabled {
+  color: var(--text-muted);
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* ---- Cheat Sheet Section Navigation ---- */
+.cheatsheet-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.cheatsheet-nav[hidden] {
+  display: none;
+}
+
+.cheatsheet-nav a {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 11px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  line-height: 1.25;
+}
+
+.cheatsheet-nav a:hover,
+.cheatsheet-nav a:focus-visible {
+  background: var(--nv-green);
+  border-color: var(--nv-green);
+  color: #000;
+}
+
+/* ---- Empty State ---- */
+.study-empty {
+  padding: 56px 24px;
+  background: var(--bg-card);
+  border: 1px dashed var(--border-light);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.study-empty h3 {
+  margin-bottom: 8px;
+}
+
+.study-empty p {
+  margin-bottom: 18px;
+  color: var(--text-secondary);
 }
 
 /* Reference Sheet Styling */
@@ -509,7 +773,7 @@ button:focus-visible {
   border-radius: var(--radius-md);
   padding: 16px 20px;
   margin-bottom: 24px;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 0.85rem;
 }
 
@@ -528,6 +792,7 @@ button:focus-visible {
 .footer .source-credit {
   max-width: 760px;
   margin: 12px auto 0;
+  color: var(--text-secondary);
   font-size: 0.8rem;
   line-height: 1.5;
 }
@@ -556,7 +821,8 @@ button:focus-visible {
 }
 
 .topic-btn:hover,
-.topic-btn.active {
+.topic-btn.active,
+.topic-btn[aria-pressed="true"] {
   background: var(--nv-green);
   color: #000;
   border-color: var(--nv-green);
@@ -651,7 +917,8 @@ button:focus-visible {
   background: var(--nv-green-glow);
 }
 
-.option-btn.selected {
+.option-btn.selected,
+.option-btn[aria-pressed="true"] {
   border-color: var(--nv-green);
   background: var(--nv-green-glow);
 }
@@ -685,7 +952,8 @@ button:focus-visible {
   flex-shrink: 0;
 }
 
-.option-btn.selected .option-letter {
+.option-btn.selected .option-letter,
+.option-btn[aria-pressed="true"] .option-letter {
   background: var(--nv-green);
   color: #000;
   border-color: var(--nv-green);
@@ -707,6 +975,33 @@ button:focus-visible {
   background: var(--success);
   color: #fff;
   border-color: var(--success);
+}
+
+/* Answered questions stay readable but no longer accept input. */
+.option-btn:disabled {
+  cursor: default;
+}
+
+.option-btn:disabled:hover {
+  border-color: var(--border-color);
+  background: var(--bg-input);
+}
+
+.option-btn.selected:disabled:hover,
+.option-btn[aria-pressed="true"]:disabled:hover {
+  border-color: var(--nv-green);
+  background: var(--nv-green-glow);
+}
+
+.option-btn.correct:disabled:hover,
+.option-btn.show-correct:disabled:hover {
+  border-color: var(--success);
+  background: rgba(39, 174, 96, 0.1);
+}
+
+.option-btn.incorrect:disabled:hover {
+  border-color: var(--danger);
+  background: rgba(231, 76, 60, 0.1);
 }
 
 .option-text {
@@ -752,6 +1047,22 @@ button:focus-visible {
   background: var(--nv-green);
   color: #000;
   border-color: var(--nv-green);
+}
+
+.show-answer-btn:disabled,
+.show-answer-btn[aria-disabled="true"] {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-muted);
+  cursor: default;
+  opacity: 0.8;
+}
+
+.show-answer-btn:disabled:hover,
+.show-answer-btn[aria-disabled="true"]:hover {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-muted);
 }
 
 /* ---- Exam Mode ---- */
@@ -1190,6 +1501,39 @@ button:focus-visible {
   font-size: 0.85rem;
 }
 
+.footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  text-align: left;
+}
+
+.footer-row p {
+  color: var(--text-muted);
+}
+
+.footer-note {
+  margin-top: 4px;
+  font-size: 0.78rem;
+}
+
+.footer-github {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  background: var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+}
+
+.footer-github:hover {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
 /* ---- Utility ---- */
 .text-green { color: var(--nv-green); }
 .text-muted { color: var(--text-muted); }
@@ -1259,6 +1603,43 @@ button:focus-visible {
     flex-wrap: wrap;
   }
 
+  .study-header {
+    padding-top: 28px;
+  }
+
+  .study-header-main {
+    flex-basis: 100%;
+  }
+
+  .study-summary {
+    width: 100%;
+  }
+
+  .study-summary-item {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .study-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .study-search {
+    flex: 0 0 auto;
+    max-width: none;
+  }
+
+  .study-toolbar-meta {
+    justify-content: space-between;
+  }
+
+  .footer-row {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
   .navbar-links a {
     padding: 6px 10px;
     font-size: 0.8rem;
@@ -1287,6 +1668,30 @@ button:focus-visible {
   h1 { font-size: 1.6rem; }
   h2 { font-size: 1.3rem; }
 
+  .study-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .study-tab {
+    gap: 6px;
+    padding: 10px 8px;
+    font-size: 0.85rem;
+  }
+
+  .study-tab-count {
+    min-width: 1.4rem;
+    height: 1.2rem;
+    font-size: 0.68rem;
+  }
+
+  .study-summary-item {
+    padding: 10px 8px;
+  }
+
+  .study-summary-value {
+    font-size: 1.1rem;
+  }
+
   .hero .exam-info span {
     display: block;
     margin: 4px auto;
@@ -1303,5 +1708,32 @@ button:focus-visible {
 
   .question-card {
     padding: 20px;
+  }
+}
+
+@media (max-width: 400px) {
+  /* At the narrowest supported width the bank count would force the tab
+     labels to wrap awkwardly. The header summary still exposes the count. */
+  .study-tab-count {
+    display: none;
+  }
+
+  .study-tab {
+    padding: 10px 6px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

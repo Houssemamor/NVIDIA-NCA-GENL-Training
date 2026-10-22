@@ -66,6 +66,12 @@ const banks = [
       "AI Infrastructure": 20,
       "AI Operations": 11
     },
+    // The AIIO mock exam draws 50 questions at 38/40/22 weighting.
+    expectedDomainQuotas: {
+      "Essential AI Knowledge": 19,
+      "AI Infrastructure": 20,
+      "AI Operations": 11
+    },
     expectedCommunityCount: 50
   }
 ];
