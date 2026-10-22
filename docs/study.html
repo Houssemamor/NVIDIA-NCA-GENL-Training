@@ -15,6 +15,10 @@
         <span class="nvidia-badge">NVIDIA</span>
         NCA-GENL Study Hub
       </a>
+      <div class="track-switch" aria-label="Certification track">
+        <a href="index.html" class="active">GENL</a>
+        <a href="aiio.html">AIIO</a>
+      </div>
       <div class="navbar-links">
         <a href="index.html">Home</a>
         <a href="study.html" class="active">Study</a>
@@ -32,8 +36,8 @@
 
     <!-- Tabs -->
     <div class="study-tabs">
-      <button class="study-tab active" onclick="showTab('cheatsheet')">Cheat Sheet</button>
-      <button class="study-tab" onclick="showTab('questions')">Practice Questions</button>
+      <button class="study-tab active" onclick="showTab('cheatsheet', this)">Cheat Sheet</button>
+      <button class="study-tab" onclick="showTab('questions', this)">Practice Questions</button>
     </div>
 
     <!-- CHEAT SHEET TAB -->
@@ -55,7 +59,7 @@
           <div class="ref-code-block">Input &rarr; Embedding + Positional Encoding &rarr; Multi-Head Attention &rarr; Add &amp; Norm &rarr; Feed-Forward &rarr; Add &amp; Norm &rarr; Output</div>
 
           <h4>Self-Attention Formula</h4>
-          <div class="ref-code-block">Attention(Q, K, V) = softmax((QK<sup>T</sup>) / √(d<sub>k</sub>)) V</div>
+          <div class="ref-code-block">Attention(Q, K, V) = softmax((QK<sup>T</sup>) / &radic;(d<sub>k</sub>)) V</div>
 
           <h4>Q, K, V Matrices (MEMORIZE!)</h4>
           <ul>

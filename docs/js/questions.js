@@ -1,6 +1,6 @@
 const QUESTIONS_DB = {
   metadata: {
-    totalQuestions: 113,
+    totalQuestions: 116,
     topics: [
       "Attention Mechanisms",
       "Data Analysis",
@@ -1747,7 +1747,7 @@ const QUESTIONS_DB = {
       ],
       correctAnswer: 1,
       correctAnswers: [1],
-      explanation: "Retrieval-Augmented Generation (RAG) is a methodology that enhances the performance of large language models (LLMs) by integrating an information retrieval component with a generative model. As described in the seminal paper by Lewis et al. (2020), RAG retrieves relevant documents from an external knowledge base (e.g., using dense vector representations) and uses them to inform the generative process, enabling more accurate and contextually relevant responses. NVIDIA’s documentation on generative AI workflows, particularly in the context of NeMo and Triton Inference Server, highlights RAG as a technique to improve LLM outputs by grounding them in external data, especially for tasks requiring factual accuracy or domain-specific knowledge. Option A is incorrect because RAG does not involve retraining the model but rather augments it with retrieved data. Option C is too vague and does not capture the retrieval aspect, while Option D refers to fine-tuning, which is a separate process.",
+      explanation: "Retrieval-Augmented Generation (RAG) is a methodology that enhances the performance of large language models (LLMs) by integrating an information retrieval component with a generative model. As described in the seminal paper by Lewis et al. (2020), RAG retrieves relevant documents from an external knowledge base (e.g., using dense vector representations) and uses them to inform the generative process, enabling more accurate and contextually relevant responses. NVIDIA's documentation on generative AI workflows, particularly in the context of NeMo and Triton Inference Server, highlights RAG as a technique to improve LLM outputs by grounding them in external data, especially for tasks requiring factual accuracy or domain-specific knowledge. Option A is incorrect because RAG does not involve retraining the model but rather augments it with retrieved data. Option C is too vague and does not capture the retrieval aspect, while Option D refers to fine-tuning, which is a separate process.",
       topic: "NLP Applications",
       multiSelect: false
       },
@@ -1762,9 +1762,15 @@ const QUESTIONS_DB = {
       ],
       correctAnswer: 1,
       correctAnswers: [1],
-      explanation: "When fine-tuning large language models (LLMs), the primary goal is to improve the model’s performance on a specific task. The most common metric for assessing this performance is accuracy on a validation set, as it directly measures how well the model generalizes to unseen data.",
+      explanation: "When fine-tuning large language models (LLMs), the primary goal is to improve the model's performance on a specific task. The most common metric for assessing this performance is accuracy on a validation set, as it directly measures how well the model generalizes to unseen data.",
       topic: "Fine-tuning",
       multiSelect: false
       }
   ]
 };
+
+// Top-level const does not create a window property. The per-track scripts
+// look banks up by configurable global name, so expose this one explicitly.
+if (typeof window !== "undefined") {
+  window.QUESTIONS_DB = QUESTIONS_DB;
+}

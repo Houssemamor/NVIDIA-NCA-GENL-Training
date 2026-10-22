@@ -7,19 +7,39 @@
 
   var currentFilter = 'all';
 
+  // Per-track configuration is provided by the page before this script loads.
+  // Falling back to the GENL bank keeps existing pages working unchanged.
+  function getConfig() {
+    return window.TRACK_CONFIG || {};
+  }
+
+  function getDb() {
+    var globalName = getConfig().bankGlobal || 'QUESTIONS_DB';
+    return window[globalName];
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
     buildTopicFilter();
     renderQuestions('all');
+    renderSourceNotice();
   });
 
   // ---- Tab Switching ----
-  window.showTab = function(tab) {
-    // Update tab buttons
+  window.showTab = function(tab, btn) {
     var tabs = document.querySelectorAll('.study-tab');
-    tabs.forEach(function(t) { t.classList.remove('active'); });
-    event.target.classList.add('active');
+    tabs.forEach(function(t) {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
 
-    // Update panels
+    // Prefer the explicit button reference. The fallback keeps older inline
+    // handlers working in browsers that still expose window.event.
+    var activeButton = btn || (window.event && window.event.target);
+    if (activeButton) {
+      activeButton.classList.add('active');
+      activeButton.setAttribute('aria-selected', 'true');
+    }
+
     document.querySelectorAll('.study-panel').forEach(function(p) {
       p.classList.remove('active');
     });
@@ -29,14 +49,15 @@
   // ---- Topic Filter ----
   function buildTopicFilter() {
     var container = document.getElementById('topicFilter');
-    if (!container || typeof QUESTIONS_DB === 'undefined') return;
+    var db = getDb();
+    if (!container || !db) return;
 
-    var topics = QUESTIONS_DB.metadata.topics;
-    var html = '<button class="topic-btn active" onclick="filterByTopic(\'all\', this)">All (' + QUESTIONS_DB.questions.length + ')</button>';
+    var topics = db.metadata.topics;
+    var html = '<button class="topic-btn active" onclick="filterByTopic(\'all\', this)">All (' + db.questions.length + ')</button>';
 
     // Count questions per topic
     var counts = {};
-    QUESTIONS_DB.questions.forEach(function(q) {
+    db.questions.forEach(function(q) {
       counts[q.topic] = (counts[q.topic] || 0) + 1;
     });
 
@@ -64,9 +85,10 @@
   // ---- Render Questions ----
   function renderQuestions(topic) {
     var container = document.getElementById('questionList');
-    if (!container || typeof QUESTIONS_DB === 'undefined') return;
+    var db = getDb();
+    if (!container || !db) return;
 
-    var questions = QUESTIONS_DB.questions;
+    var questions = db.questions;
     if (topic !== 'all') {
       questions = questions.filter(function(q) { return q.topic === topic; });
     }
@@ -108,11 +130,54 @@
     container.innerHTML = html;
   }
 
+  // ---- Attribution ----
+  // The combined AIIO bank carries a sources array. Render it where the page
+  // provides a sourceNotice element. GENL pages have no sources array and are
+  // left unchanged.
+  function renderSourceNotice() {
+    var container = document.getElementById('sourceNotice');
+    var db = getDb();
+    if (!container || !db || !Array.isArray(db.metadata.sources)) return;
+
+    var html = '<strong>Question sources</strong>';
+    db.metadata.sources.forEach(function(source) {
+      html += '<p>' + escapeHtml(source.title) + ' by ';
+
+      if (source.url) {
+        html += '<a href="' + escapeHtml(source.url) + '" target="_blank" rel="noopener">' +
+          escapeHtml(source.author) + '</a>';
+      } else {
+        html += escapeHtml(source.author);
+      }
+
+      if (source.copyright) {
+        html += '. ' + escapeHtml(source.copyright);
+      }
+
+      if (source.licenseUrl) {
+        html += '. Licensed under <a href="' + escapeHtml(source.licenseUrl) +
+          '" target="_blank" rel="noopener">' + escapeHtml(source.license) + '</a>';
+      } else if (source.license) {
+        html += '. ' + escapeHtml(source.license);
+      }
+
+      if (source.changes) {
+        html += '. Changes: ' + escapeHtml(source.changes);
+      }
+      html += '.</p>';
+    });
+
+    container.innerHTML = html;
+    container.classList.remove('hidden');
+  }
+
   // ---- Study Interaction ----
   var studySelections = {};
 
   window.selectStudyOption = function(qId, optIndex, btn) {
-    var q = QUESTIONS_DB.questions.find(function(x) { return x.id === qId; });
+    var db = getDb();
+    if (!db) return;
+    var q = db.questions.find(function(x) { return x.id === qId; });
     if (!q) return;
 
     if (q.multiSelect) {
@@ -138,7 +203,9 @@
   };
 
   window.showStudyAnswer = function(qId) {
-    var q = QUESTIONS_DB.questions.find(function(x) { return x.id === qId; });
+    var db = getDb();
+    if (!db) return;
+    var q = db.questions.find(function(x) { return x.id === qId; });
     if (!q) return;
 
     var container = document.getElementById('study-opts-' + qId);

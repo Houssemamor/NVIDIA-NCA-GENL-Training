@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Mode | NCA-AIIO Study Hub</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar" aria-label="Primary">
+    <div class="container">
+      <a href="aiio.html" class="navbar-brand">
+        <span class="nvidia-badge">NVIDIA</span>
+        NCA-AIIO Study Hub
+      </a>
+      <div class="track-switch" aria-label="Certification track">
+        <a href="index.html">GENL</a>
+        <a href="aiio.html" class="active">AIIO</a>
+      </div>
+      <div class="navbar-links">
+        <a href="aiio.html">Home</a>
+        <a href="aiio-study.html" class="active">Study</a>
+        <a href="aiio-exam.html">Mock Exam</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>NCA-AIIO Study Mode</h1>
+      <p>Review the AI infrastructure cheat sheet and practice 125 questions at your own pace.</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="study-tabs" role="tablist" aria-label="Study views">
+      <button class="study-tab active" onclick="showTab('cheatsheet', this)" role="tab" aria-selected="true">Cheat Sheet</button>
+      <button class="study-tab" onclick="showTab('questions', this)" role="tab" aria-selected="false">Practice Questions</button>
+    </div>
+
+    <!-- CHEAT SHEET TAB -->
+    <div id="tab-cheatsheet" class="study-panel active">
+      <div class="ref-sheet">
+
+        <div class="ref-section">
+          <h3>Exam Quick Facts</h3>
+          <div class="ref-highlight">
+            <strong>50 questions</strong> | <strong>60 minutes</strong> (1.2 min/question) | Multiple choice and multiple-select | Online proctored | ~$125 USD | Aim for <strong>80%+</strong> on practice
+          </div>
+          <p>Blueprint weighting: <strong>38% Essential AI Knowledge</strong>, <strong>40% AI Infrastructure</strong>, <strong>22% AI Operations</strong>.</p>
+        </div>
+
+        <div class="ref-section">
+          <h3>Domain 1: Essential AI Knowledge</h3>
+
+          <h4>AI, Machine Learning, and Deep Learning</h4>
+          <ul>
+            <li><strong>Artificial intelligence:</strong> The broad field of building systems that perform tasks associated with human intelligence.</li>
+            <li><strong>Machine learning:</strong> A subset of AI in which models learn patterns from data instead of following only hand-written rules.</li>
+            <li><strong>Deep learning:</strong> A subset of machine learning that uses multi-layer neural networks to learn hierarchical features.</li>
+          </ul>
+
+          <h4>Training vs Inference</h4>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Phase</th><th>Main Goal</th><th>Resource Pattern</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Training</strong></td><td>Learn model weights from data</td><td>Forward pass, loss, backpropagation, activation storage, large batches, multi-node scaling</td></tr>
+              <tr><td><strong>Inference</strong></td><td>Serve predictions with low latency and high throughput</td><td>Smaller batches, KV cache for LLMs, batching, quantization, model optimization</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Transformer Pipeline (High Level)</h4>
+          <div class="ref-code-block">Tokens -&gt; Embeddings + Positional Encoding -&gt; Multi-Head Attention -&gt; Add &amp; Norm -&gt; Feed-Forward -&gt; Add &amp; Norm -&gt; Output</div>
+          <p>Self-attention compares each token with the others: <code>Attention(Q, K, V) = softmax(QK^T / sqrt(d_k)) V</code>. Multi-head attention lets the model learn several relationship types at once.</p>
+
+          <h4>Scaling Laws and Memory Math</h4>
+          <ul>
+            <li><strong>Chinchilla-style scaling:</strong> Model quality depends strongly on training compute and the number of training tokens, scaled together.</li>
+            <li><strong>Weight memory:</strong> <code>parameters x bytes per parameter</code>. A 70B model in FP16 needs about <code>70B x 2 bytes = 140 GB</code> just for weights.</li>
+            <li><strong>Practical memory:</strong> Add activations, KV cache, gradients, optimizer state, and runtime overhead. Training needs substantially more than inference.</li>
+            <li><strong>Activation memory:</strong> Training retains intermediate activations for backpropagation; this often dominates memory for large transformer training jobs.</li>
+          </ul>
+
+          <h4>Precision Formats</h4>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Format</th><th>Typical Size</th><th>Primary Use</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>FP32</strong></td><td>4 bytes</td><td>Reference training, high precision</td></tr>
+              <tr><td><strong>TF32</strong></td><td>Internal Tensor Core format</td><td>Faster training math with FP32-like range</td></tr>
+              <tr><td><strong>FP16 / BF16</strong></td><td>2 bytes</td><td>Mixed-precision training and inference</td></tr>
+              <tr><td><strong>FP8</strong></td><td>1 byte</td><td>Hopper-generation training and inference acceleration</td></tr>
+              <tr><td><strong>FP4</strong></td><td>0.5 byte per value</td><td>Blackwell-generation low-precision inference and training</td></tr>
+            </tbody>
+          </table>
+          <div class="ref-highlight">
+            <strong>Exam trap:</strong> Lower precision reduces memory and can increase throughput, but it may reduce accuracy. Quantization is a trade-off, not a free win.
+          </div>
+
+          <h4>NVIDIA Software Stack</h4>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Component</th><th>Purpose</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>NeMo</strong></td><td>Training, fine-tuning, and deployment framework for LLMs, automatic speech recognition, and text-to-speech</td></tr>
+              <tr><td><strong>RAPIDS</strong></td><td>GPU-accelerated data science: cuDF for pandas-like work, cuML for scikit-learn-like work</td></tr>
+              <tr><td><strong>TensorRT</strong></td><td>Inference optimization: layer fusion, kernel selection, reduced precision</td></tr>
+              <tr><td><strong>Triton Inference Server</strong></td><td>Multi-framework model serving with dynamic batching and model versioning</td></tr>
+              <tr><td><strong>NVIDIA NIM</strong></td><td>Packaged, optimized inference microservices for fast deployment</td></tr>
+              <tr><td><strong>NGC</strong></td><td>Catalog of GPU-optimized containers, models, and SDKs</td></tr>
+              <tr><td><strong>NCCL</strong></td><td>Collective communication library for multi-GPU and multi-node training</td></tr>
+              <tr><td><strong>DOCA</strong></td><td>Software framework for BlueField DPUs and infrastructure services</td></tr>
+            </tbody>
+          </table>
+
+          <h4>GPU Families</h4>
+          <table class="ref-table">
+            <thead>
+              <tr><th>GPU / System</th><th>Architecture</th><th>Key Point</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>H100</strong></td><td>Hopper</td><td>FP8, HBM3, NVLink 4, MIG support, up to 7 MIG instances</td></tr>
+              <tr><td><strong>B200</strong></td><td>Blackwell</td><td>FP4 support, HBM3e, NVLink 5</td></tr>
+              <tr><td><strong>GB200 / GB300 NVL72</strong></td><td>Grace Blackwell</td><td>Rack-scale systems; GB300 NVL72 pairs 72 GPUs with 36 Grace CPUs</td></tr>
+              <tr><td><strong>L40S</strong></td><td>Ada Lovelace</td><td>AI inference plus professional visualization and rendering</td></tr>
+              <tr><td><strong>L4</strong></td><td>Ada Lovelace</td><td>Efficient inference, video, and virtual desktop workloads</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ref-section">
+          <h3>Domain 2: AI Infrastructure</h3>
+
+          <h4>GPU and Node Architecture</h4>
+          <ul>
+            <li><strong>Streaming multiprocessors (SMs):</strong> Execute CUDA threads and warps.</li>
+            <li><strong>Tensor Cores:</strong> Accelerate matrix multiply-accumulate operations used by deep learning.</li>
+            <li><strong>HBM:</strong> High-bandwidth memory close to the GPU; capacity and bandwidth are primary model-fit constraints.</li>
+            <li><strong>NVLink and NVSwitch:</strong> High-bandwidth GPU-to-GPU fabric for scale-up inside a node or rack.</li>
+            <li><strong>DGX H100:</strong> Eight H100 GPUs with four NVSwitch chips and 640 GB of total HBM3 memory.</li>
+          </ul>
+
+          <h4>Scale-Up vs Scale-Out</h4>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Model</th><th>Scope</th><th>Interconnect</th><th>Trade-off</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Scale-up</strong></td><td>GPUs inside one node or rack</td><td>NVLink / NVSwitch</td><td>Very high bandwidth and low latency; limited domain size</td></tr>
+              <tr><td><strong>Scale-out</strong></td><td>Multiple nodes</td><td>InfiniBand or Ethernet</td><td>Horizontal growth and fault tolerance; higher communication latency</td></tr>
+            </tbody>
+          </table>
+
+          <h4>AI Networking</h4>
+          <ul>
+            <li><strong>InfiniBand data rates:</strong> HDR 200 Gbps, NDR 400 Gbps, XDR 800 Gbps per port.</li>
+            <li><strong>RoCEv2:</strong> RDMA over Converged Ethernet. Requires careful congestion control, lossless configuration, and telemetry to approach InfiniBand latency.</li>
+            <li><strong>Spectrum-X:</strong> NVIDIA Ethernet platform for AI that combines Spectrum-X switches with BlueField-3 SuperNICs or DPUs, adaptive routing, and congestion control.</li>
+            <li><strong>SHARP:</strong> In-network aggregation and reduction for InfiniBand, allowing collective operations such as all-reduce to run inside the switch fabric.</li>
+            <li><strong>GPUDirect RDMA:</strong> Lets a network adapter transfer data directly to or from GPU memory, avoiding a host-memory copy.</li>
+            <li><strong>East-west traffic:</strong> GPU-to-GPU training traffic, latency-sensitive, often RDMA. <strong>North-south traffic:</strong> user and management traffic, often standard TCP.</li>
+            <li><strong>Job completion time</strong> is the outcome metric for an AI network; bandwidth and latency are diagnostic measures.</li>
+          </ul>
+
+          <h4>DPUs</h4>
+          <ul>
+            <li><strong>BlueField-3:</strong> 400 Gb/s DPU used for networking, storage, security, and infrastructure offload.</li>
+            <li><strong>Isolation:</strong> Infrastructure services can run in a separate DPU domain, remaining enforceable if the host operating system is compromised.</li>
+            <li><strong>DOCA:</strong> SDK and runtime for building DPU-accelerated services.</li>
+          </ul>
+
+          <h4>Storage</h4>
+          <ul>
+            <li><strong>Parallel distributed file systems</strong> such as Lustre and WEKA provide the aggregate bandwidth and concurrent access needed by many training workers.</li>
+            <li><strong>Local NVMe</strong> is fast but isolated to one node; it is useful for caching and scratch data.</li>
+            <li><strong>Object storage</strong> is durable and cheap for datasets and checkpoints but usually adds latency for active training reads.</li>
+          </ul>
+
+          <h4>Power and Cooling</h4>
+          <ul>
+            <li><strong>PUE = total facility power / IT equipment power.</strong> A PUE of 1.15 means facility power is 15% higher than IT power, not that 15% is all cooling.</li>
+            <li><strong>Air cooling</strong> becomes impractical for many GPU-dense racks above roughly 40-50 kW; <strong>direct liquid cooling</strong> is commonly used at that density.</li>
+            <li><strong>Immersion cooling</strong> is an alternative for very high density but is not the only valid option.</li>
+            <li><strong>BMC:</strong> Baseboard management controller provides out-of-band power, console, sensor, and firmware management even when the host OS is down.</li>
+          </ul>
+
+          <h4>Deployment Models</h4>
+          <ul>
+            <li><strong>On-premises DGX + InfiniBand:</strong> Strong choice when data must remain under organizational control and maximum training performance is required.</li>
+            <li><strong>Public cloud:</strong> Fast capacity and elasticity, but data residency, egress, and cost must be evaluated.</li>
+            <li><strong>NVIDIA-Certified Systems:</strong> Partner-built servers validated against NVIDIA's baseline for performance, security, and scale.</li>
+          </ul>
+        </div>
+
+        <div class="ref-section">
+          <h3>Domain 3: AI Operations</h3>
+
+          <h4>GPU Monitoring Pipeline</h4>
+          <div class="ref-code-block">DCGM -&gt; DCGM Exporter -&gt; Prometheus -&gt; Grafana</div>
+          <ul>
+            <li><strong>DCGM:</strong> NVIDIA Data Center GPU Manager. Collects telemetry, health, diagnostics, and policy data.</li>
+            <li><strong>DCGM Exporter:</strong> Exposes DCGM metrics in Prometheus format.</li>
+            <li><strong>Key metrics:</strong> GPU utilization, memory utilization, temperature, power, ECC errors, XID errors, throttle reasons, NVLink errors, PCIe replay.</li>
+            <li><strong>MFU:</strong> Model FLOP Utilization. High GPU utilization with low MFU often means small kernels, launch overhead, or poor Tensor Core use rather than useful math.</li>
+          </ul>
+
+          <h4>Orchestration and Scheduling</h4>
+          <ul>
+            <li><strong>NVIDIA Device Plugin:</strong> Exposes GPUs to Kubernetes as schedulable resources such as <code>nvidia.com/gpu</code>.</li>
+            <li><strong>NVIDIA GPU Operator:</strong> Automates drivers, container toolkit, device plugin, GPU feature discovery, and monitoring components on Kubernetes.</li>
+            <li><strong>Gang scheduling:</strong> Allocates all workers of a distributed job together, preventing partial allocation deadlocks.</li>
+            <li><strong>Run:ai:</strong> Kubernetes-native GPU scheduling with quotas, fractional allocation, and preemption.</li>
+            <li><strong>Slurm:</strong> Common HPC batch scheduler; <code>--gres=gpu:4</code> requests four GPUs.</li>
+            <li><strong>Base Command Platform:</strong> NVIDIA's management layer for DGX clusters, including workload management and software lifecycle.</li>
+          </ul>
+
+          <h4>Virtualization</h4>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Method</th><th>Isolation</th><th>Typical Use</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>MIG</strong></td><td>Hardware-level partitions with dedicated compute, memory, and cache</td><td>Multi-tenant sharing with predictable performance; up to 7 instances on H100</td></tr>
+              <tr><td><strong>vGPU</strong></td><td>Hypervisor-managed virtual GPU</td><td>Virtual desktops and virtual machines; requires an NVIDIA vGPU entitlement, commonly through AI Enterprise</td></tr>
+              <tr><td><strong>Passthrough</strong></td><td>Whole GPU assigned to one VM</td><td>Maximum isolation, but no sharing of that GPU among tenants</td></tr>
+              <tr><td><strong>Time-slicing</strong></td><td>No hardware memory or fault isolation</td><td>Development and low-risk oversubscription, not strict multi-tenant isolation</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Reliability and Performance</h4>
+          <ul>
+            <li><strong>ECC single-bit errors (SBE):</strong> Correctable; track trends but do not ignore repeated events.</li>
+            <li><strong>ECC double-bit errors (DBE):</strong> Uncorrectable; investigate immediately and consider page retirement or GPU replacement.</li>
+            <li><strong>Thermal throttling:</strong> Many data center GPUs reduce clocks in the mid-80s Celsius to protect hardware; check the specific model's limits and throttle reasons.</li>
+            <li><strong>NCCL all-reduce:</strong> Gradient synchronization across GPUs. Slow all-reduce points to fabric bandwidth, latency, or congestion problems.</li>
+            <li><strong>100 Gbps Ethernet</strong> is undersized for large distributed training fabrics; InfiniBand or 400G+ Ethernet is the usual upgrade path.</li>
+          </ul>
+        </div>
+
+        <div class="ref-section">
+          <h3>High-Yield Numbers</h3>
+          <table class="ref-table">
+            <thead>
+              <tr><th>Item</th><th>Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>NCA-AIIO exam</td><td>50 questions, 60 minutes, ~$125 USD</td></tr>
+              <tr><td>Blueprint</td><td>38% Essential AI, 40% Infrastructure, 22% Operations</td></tr>
+              <tr><td>70B model, FP16 weights</td><td>About 140 GB</td></tr>
+              <tr><td>DGX H100</td><td>8 H100 GPUs, 4 NVSwitch chips, 640 GB HBM3</td></tr>
+              <tr><td>H100 MIG maximum</td><td>7 instances</td></tr>
+              <tr><td>InfiniBand rates</td><td>HDR 200, NDR 400, XDR 800 Gbps per port</td></tr>
+              <tr><td>BlueField-3</td><td>400 Gb/s DPU</td></tr>
+              <tr><td>GB300 NVL72</td><td>72 GPUs, 36 Grace CPUs</td></tr>
+              <tr><td>PUE 1.15</td><td>Facility power is 15% above IT power</td></tr>
+              <tr><td>Liquid cooling threshold</td><td>Commonly around 40-50 kW per rack and above</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ref-section">
+          <h3>Exam Traps</h3>
+          <ul>
+            <li><strong>GPU utilization is not performance.</strong> A GPU can be busy with small kernels while useful FLOP utilization stays low.</li>
+            <li><strong>PUE is a ratio, not a cooling percentage.</strong> The overhead includes cooling, power distribution, and other facility loads.</li>
+            <li><strong>MIG is not the same as time-slicing.</strong> MIG partitions hardware resources; time-slicing shares a GPU without full isolation.</li>
+            <li><strong>vGPU is licensed software.</strong> It is not included automatically with the GPU hardware.</li>
+            <li><strong>Scale-up is not scale-out.</strong> NVLink is the scale-up fabric; InfiniBand or Ethernet is the scale-out fabric.</li>
+            <li><strong>East-west is not north-south.</strong> Training traffic is east-west; user and management traffic is north-south.</li>
+            <li><strong>Free access is not a license.</strong> Third-party practice content may be copyrighted even when it is free to read.</li>
+            <li><strong>Read the qualifier.</strong> Words such as "primary", "best", "most likely", and "minimum" change the intended answer.</li>
+          </ul>
+        </div>
+
+        <div class="ref-section">
+          <h3>Exam Time Management</h3>
+          <ul>
+            <li><strong>First pass (30-35 min):</strong> Answer confident questions, mark uncertain ones, and keep moving.</li>
+            <li><strong>Second pass (20-25 min):</strong> Review marked questions and use elimination.</li>
+            <li><strong>Final check (5 min):</strong> Confirm every question has an answer and revisit flagged items.</li>
+          </ul>
+          <div class="ref-highlight">
+            <strong>Tip:</strong> The exam is 50 questions in 60 minutes. Do not spend more than about 90 seconds on any single question on the first pass.
+          </div>
+        </div>
+
+        <div class="ref-section">
+          <h3>Question Sources</h3>
+          <p>
+            50 practice questions are adapted from
+            <a href="https://github.com/ziash/nvidia-nca-aiio-study-guide" target="_blank" rel="noopener">NVIDIA NCA-AIIO Study Guide - Self-Quiz</a>
+            by Zia Zeeshan, Copyright (c) 2026 Zia Zeeshan, licensed under
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+            Changes: converted to the site question schema, converted punctuation to ASCII, added explanations,
+            mapped questions to NCA-AIIO domains and topics, and clarified selected questions for accuracy.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- QUESTIONS TAB -->
+    <div id="tab-questions" class="study-panel">
+      <!-- Rendered from QUESTIONS_DB_AIIO.metadata.sources. -->
+      <div id="sourceNotice" class="source-notice hidden"></div>
+
+      <!-- Topic Filter -->
+      <div class="topic-filter" id="topicFilter"></div>
+
+      <!-- Question List -->
+      <div id="questionList"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <p>NCA-AIIO Study Hub &mdash; Built for exam preparation</p>
+          <p style="margin-top: 4px;">Not affiliated with NVIDIA Corporation</p>
+        </div>
+        <a href="https://github.com/Houssemamor/NVIDIA-NCA-GENL-Training" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--border-color); border-radius: var(--radius-md); text-decoration: none; color: inherit; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-card)'" onmouseout="this.style.background='var(--border-color)'">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v 3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          View on GitHub
+        </a>
+      </div>
+      <p class="source-credit">
+        50 community questions: <a href="aiio.html#sources">Zia Zeeshan, CC BY 4.0</a>. The Practice Questions tab shows the full attribution and change notice.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    window.TRACK_CONFIG = {
+      bankGlobal: 'QUESTIONS_DB_AIIO',
+      examName: 'NCA-AIIO',
+      storagePrefix: 'nca_aiio',
+      questionCount: 50,
+      timeLimitSeconds: 3600,
+      targetPercent: 80
+    };
+  </script>
+  <script src="js/questions-aiio.js"></script>
+  <script src="js/questions-aiio-community.js"></script>
+  <script src="js/questions-aiio-combined.js"></script>
+  <script src="js/study.js"></script>
+</body>
+</html>

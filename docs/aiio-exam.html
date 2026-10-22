@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mock Exam | NCA-AIIO Study Hub</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar" aria-label="Primary">
+    <div class="container">
+      <a href="aiio.html" class="navbar-brand">
+        <span class="nvidia-badge">NVIDIA</span>
+        NCA-AIIO Study Hub
+      </a>
+      <div class="track-switch" aria-label="Certification track">
+        <a href="index.html">GENL</a>
+        <a href="aiio.html" class="active">AIIO</a>
+      </div>
+      <div class="navbar-links">
+        <a href="aiio.html">Home</a>
+        <a href="aiio-study.html">Study</a>
+        <a href="aiio-exam.html" class="active">Mock Exam</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- SETUP SCREEN -->
+    <div id="examSetup" class="exam-setup">
+      <h2>NCA-AIIO Mock Exam</h2>
+      <p>Simulate the real NCA-AIIO certification exam with randomized questions, shuffled answers, and a countdown timer.</p>
+
+      <div class="exam-info-grid">
+        <div class="exam-info-item">
+          <div class="value">50</div>
+          <div class="label">Questions</div>
+        </div>
+        <div class="exam-info-item">
+          <div class="value">60</div>
+          <div class="label">Minutes</div>
+        </div>
+        <div class="exam-info-item">
+          <div class="value">80%</div>
+          <div class="label">Target</div>
+        </div>
+      </div>
+
+      <div class="source-notice" style="text-align: left;">
+        <strong>Question sources</strong>
+        <p>
+          50 questions adapted from
+          <a href="https://github.com/ziash/nvidia-nca-aiio-study-guide" target="_blank" rel="noopener">NVIDIA NCA-AIIO Study Guide - Self-Quiz</a>
+          by Zia Zeeshan, Copyright (c) 2026 Zia Zeeshan, licensed under
+          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+          Changes: schema conversion, ASCII punctuation, added explanations, domain/topic mapping, and selected wording clarifications.
+        </p>
+      </div>
+
+      <div id="resumePrompt" class="hidden" style="background: var(--bg-card); border: 1px solid var(--warning); border-radius: var(--radius-md); padding: 20px; margin-bottom: 24px;">
+        <p style="color: var(--warning); font-weight: 600; margin-bottom: 12px;">You have an unfinished exam session.</p>
+        <div style="display: flex; gap: 12px; justify-content: center;">
+          <button class="btn btn-primary" onclick="resumeExam()">Resume Exam</button>
+          <button class="btn btn-secondary" onclick="discardSession()">Start Fresh</button>
+        </div>
+      </div>
+
+      <button id="startBtn" class="btn btn-primary btn-lg" onclick="startExam()">Start Mock Exam</button>
+    </div>
+
+    <!-- EXAM INTERFACE -->
+    <div id="examContainer" class="exam-container">
+      <!-- Top Bar -->
+      <div class="exam-topbar">
+        <div class="timer" id="timer">
+          <span class="timer-icon">&#9202;</span>
+          <span id="timerDisplay">60:00</span>
+        </div>
+        <div class="exam-progress">
+          <span id="progressText">1 / 50</span>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 2%"></div>
+          </div>
+          <span id="answeredCount">0 answered</span>
+        </div>
+      </div>
+
+      <!-- Question Grid -->
+      <div class="question-grid" id="questionGrid"></div>
+
+      <!-- Current Question -->
+      <div class="exam-question" id="examQuestion">
+        <div class="question-header">
+          <span class="question-number" id="qNumber">Q1</span>
+          <span class="question-topic" id="qTopic">Topic</span>
+        </div>
+        <div class="question-text" id="qText">Loading...</div>
+        <div class="options-list" id="qOptions"></div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="exam-nav">
+        <button class="nav-btn" id="prevBtn" onclick="prevQuestion()">&#8592; Previous</button>
+        <button class="mark-review-btn" id="markBtn" onclick="toggleMark()">&#9873; Mark for Review</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextQuestion()">Next -&gt;</button>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-section">
+        <button class="btn btn-primary btn-lg" onclick="confirmSubmit()">Submit Exam</button>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="resultsContainer" class="results-container">
+      <h2 style="margin-bottom: 24px;">Exam Results</h2>
+
+      <div class="results-score-circle" id="scoreCircle">
+        <div class="score-percent" id="scorePercent">0%</div>
+        <div class="score-label" id="scoreRaw">0/50</div>
+      </div>
+
+      <div class="results-message" id="resultsMessage">--</div>
+      <div class="results-detail" id="resultsDetail">--</div>
+
+      <div class="results-stats">
+        <div class="results-stat">
+          <div class="value text-green" id="resultCorrect">0</div>
+          <div class="label">Correct</div>
+        </div>
+        <div class="results-stat">
+          <div class="value" style="color: var(--danger)" id="resultIncorrect">0</div>
+          <div class="label">Incorrect</div>
+        </div>
+        <div class="results-stat">
+          <div class="value text-muted" id="resultUnanswered">0</div>
+          <div class="label">Unanswered</div>
+        </div>
+        <div class="results-stat">
+          <div class="value" id="resultTime">--</div>
+          <div class="label">Time Used</div>
+        </div>
+      </div>
+
+      <div class="results-actions">
+        <button class="btn btn-primary" onclick="showReview()">Review Answers</button>
+        <button class="btn btn-secondary" onclick="restartExam()">Take New Exam</button>
+        <a href="aiio.html" class="btn btn-secondary">Back to Home</a>
+      </div>
+
+      <!-- Review -->
+      <div class="review-section hidden" id="reviewSection">
+        <h3>Answer Review</h3>
+        <div class="review-filter-bar">
+          <button class="topic-btn active" onclick="filterReview('all', this)">All</button>
+          <button class="topic-btn" onclick="filterReview('incorrect', this)">Incorrect Only</button>
+          <button class="topic-btn" onclick="filterReview('correct', this)">Correct Only</button>
+          <button class="topic-btn" onclick="filterReview('unanswered', this)">Unanswered</button>
+        </div>
+        <div id="reviewList"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <p>NCA-AIIO Study Hub &mdash; Built for exam preparation</p>
+          <p style="margin-top: 4px;">Not affiliated with NVIDIA Corporation</p>
+        </div>
+        <a href="https://github.com/Houssemamor/NVIDIA-NCA-GENL-Training" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--border-color); border-radius: var(--radius-md); text-decoration: none; color: inherit; transition: background 0.2s;" onmouseover="this.style.background='var(--bg-card)'" onmouseout="this.style.background='var(--border-color)'">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v 3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          View on GitHub
+        </a>
+      </div>
+      <p class="source-credit">
+        50 community questions: <a href="aiio.html#sources">Zia Zeeshan, CC BY 4.0</a>. See the setup screen for attribution and changes.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    window.TRACK_CONFIG = {
+      bankGlobal: 'QUESTIONS_DB_AIIO',
+      examName: 'NCA-AIIO',
+      storagePrefix: 'nca_aiio',
+      questionCount: 50,
+      timeLimitSeconds: 3600,
+      targetPercent: 80
+    };
+  </script>
+  <script src="js/questions-aiio.js"></script>
+  <script src="js/questions-aiio-community.js"></script>
+  <script src="js/questions-aiio-combined.js"></script>
+  <script src="js/exam.js"></script>
+</body>
+</html>

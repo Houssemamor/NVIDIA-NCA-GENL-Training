@@ -5,21 +5,30 @@
 (function() {
   'use strict';
 
+  // Per-track configuration is provided by the page before this script loads.
+  // Defaults preserve the existing NCA-GENL behavior.
+  var trackConfig = window.TRACK_CONFIG || {};
+  var bankGlobal = trackConfig.bankGlobal || 'QUESTIONS_DB';
+  var examName = trackConfig.examName || 'NCA-GENL';
+  var storagePrefix = trackConfig.storagePrefix || 'nca_genl';
+  var questionCount = trackConfig.questionCount || 50;
+  var timeLimitSeconds = trackConfig.timeLimitSeconds || 3600;
+
   // ---- State ----
   var state = {
     questions: [],       // Shuffled questions for this exam (with shuffled options)
     answers: {},         // { questionIndex: [selectedOptionIndices] }
     marked: {},          // { questionIndex: true }
     currentIndex: 0,
-    timeRemaining: 3600, // 60 minutes in seconds
+    timeRemaining: timeLimitSeconds,
     timerInterval: null,
     startTime: null,
     finished: false,
-    totalQuestions: 50
+    totalQuestions: questionCount
   };
 
-  var STORAGE_KEY = 'nca_genl_exam_session';
-  var HISTORY_KEY = 'nca_genl_history';
+  var STORAGE_KEY = storagePrefix + '_exam_session';
+  var HISTORY_KEY = storagePrefix + '_history';
 
   // ---- Init ----
   document.addEventListener('DOMContentLoaded', function() {
@@ -42,7 +51,7 @@
   // ---- Start Exam ----
   window.startExam = function() {
     localStorage.removeItem(STORAGE_KEY);
-    prepareExam();
+    if (!prepareExam()) return;
     showExamUI();
   };
 
@@ -52,7 +61,7 @@
     state.answers = saved.answers || {};
     state.marked = saved.marked || {};
     state.currentIndex = saved.currentIndex || 0;
-    state.timeRemaining = saved.timeRemaining || 3600;
+    state.timeRemaining = saved.timeRemaining || timeLimitSeconds;
     state.startTime = Date.now();
     state.finished = false;
     state.totalQuestions = state.questions.length;
@@ -65,14 +74,16 @@
   };
 
   function prepareExam() {
-    if (typeof QUESTIONS_DB === 'undefined') {
+    var db = window[bankGlobal];
+    if (!db) {
       alert('Questions database not loaded.');
-      return;
+      return false;
     }
 
-    // Pick 50 random questions (or all if fewer)
-    var allQ = QUESTIONS_DB.questions.slice();
+    // Pick the configured number of random questions (or all if fewer)
+    var allQ = db.questions.slice();
     shuffleArray(allQ);
+    state.totalQuestions = questionCount;
     var selected = allQ.slice(0, state.totalQuestions);
 
     // Shuffle options for each question
@@ -83,9 +94,10 @@
     state.answers = {};
     state.marked = {};
     state.currentIndex = 0;
-    state.timeRemaining = 3600;
+    state.timeRemaining = timeLimitSeconds;
     state.startTime = Date.now();
     state.finished = false;
+    return true;
   }
 
   function shuffleQuestion(q) {
@@ -185,8 +197,7 @@
 
     // Update nav buttons
     document.getElementById('prevBtn').disabled = state.currentIndex === 0;
-    document.getElementById('nextBtn').textContent =
-      state.currentIndex === state.questions.length - 1 ? 'Next →' : 'Next →';
+    document.getElementById('nextBtn').textContent = 'Next ->';
 
     // Update mark button
     var markBtn = document.getElementById('markBtn');
@@ -349,7 +360,7 @@
       });
     });
 
-    var timeUsed = 3600 - state.timeRemaining;
+    var timeUsed = timeLimitSeconds - state.timeRemaining;
     var percent = Math.round((correct / state.questions.length) * 100);
 
     return {
@@ -387,7 +398,7 @@
     var msg, detail;
     if (results.percent >= 90) {
       msg = 'Excellent Preparation!';
-      detail = 'You are well-prepared for the NCA-GENL certification exam.';
+      detail = 'You are well-prepared for the ' + examName + ' certification exam.';
     } else if (results.percent >= 80) {
       msg = 'Good Preparation';
       detail = 'Solid understanding. Review weak areas for even better results.';
@@ -500,11 +511,11 @@
         answers: {},
         marked: {},
         currentIndex: 0,
-        timeRemaining: 3600,
+        timeRemaining: timeLimitSeconds,
         timerInterval: null,
         startTime: null,
         finished: false,
-        totalQuestions: 50
+        totalQuestions: questionCount
       };
       document.getElementById('resultsContainer').classList.remove('active');
       document.getElementById('reviewSection').classList.add('hidden');

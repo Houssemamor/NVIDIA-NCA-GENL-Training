@@ -90,6 +90,12 @@ a:hover {
   color: var(--nv-green-light);
 }
 
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--nv-green-light);
+  outline-offset: 2px;
+}
+
 /* ---- Layout ---- */
 .container {
   max-width: 1000px;
@@ -118,6 +124,8 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .navbar-brand {
@@ -141,7 +149,38 @@ a:hover {
 
 .navbar-links {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+}
+
+/* Certification track switch. Two links only; the active track is filled. */
+.track-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  background: var(--bg-secondary);
+}
+
+.track-switch a {
+  color: var(--text-muted);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.track-switch a:hover {
+  color: var(--text-primary);
+  background: transparent;
+}
+
+.track-switch a.active {
+  background: var(--nv-green);
+  color: #000;
 }
 
 .navbar-links a {
@@ -357,6 +396,9 @@ a:hover {
 
 .ref-section {
   margin-bottom: 32px;
+  /* Dense reference tables can exceed narrow viewports. Scroll the section
+     instead of widening the whole page. */
+  overflow-x: auto;
 }
 
 .ref-section:last-child {
@@ -449,6 +491,41 @@ a:hover {
 }
 
 .ref-highlight strong {
+  color: var(--nv-green);
+}
+
+/* Third-party content attribution. Required for the CC BY 4.0 bank. */
+.source-notice {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--info);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.source-notice strong {
+  color: var(--text-primary);
+}
+
+.source-notice p {
+  margin-top: 8px;
+}
+
+.source-notice a {
+  color: var(--nv-green);
+}
+
+.footer .source-credit {
+  max-width: 760px;
+  margin: 12px auto 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.footer .source-credit a {
   color: var(--nv-green);
 }
 
@@ -1154,6 +1231,11 @@ a:hover {
   .navbar-links a {
     padding: 6px 10px;
     font-size: 0.8rem;
+  }
+
+  .track-switch a {
+    padding: 3px 8px;
+    font-size: 0.7rem;
   }
 
   .results-stats {
